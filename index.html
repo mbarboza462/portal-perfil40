@@ -220,9 +220,9 @@ const setPal=p=>{pal=p;if(p=='classico')delete document.documentElement.dataset.
 setPal(pal);
 const palHTML=()=>`<div class="pals">${PALS.map(([k,n,d,c])=>`<button class="pal" data-pal="${k}" aria-pressed="${pal==k}"><span class="sw">${c.map(x=>`<span style="background:${x}"></span>`).join('')}</span><span><b>${n}</b><small>${d}</small></span></button>`).join('')}</div>`;
 const CANVA={pasta:'https://www.canva.com/folder/FAHbrZ4ioeM',itens:[
-{id:'carrossel',t:'Carrossel: 3 sinais de que você está pronta para voltar ao mercado',f:'Carrossel 3:4',p:5,img:'arte-carrossel.jpg',v:'https://www.canva.com/d/x5OFIqYECZH4-G6',e:'https://www.canva.com/d/eQFkxQPy4ETsHGR'},
-{id:'convite',t:'Convite para a imersão Ela Por Inteiro',f:'Feed 3:4',p:1,img:'arte-convite.jpg',v:'https://www.canva.com/d/k_HafnHzNFZGlxK',e:'https://www.canva.com/d/I8oS4S5Ji8zdzHM'},
-{id:'contagem',t:'Contagem regressiva: faltam 20 dias',f:'Stories 9:16',p:1,img:'arte-contagem.jpg',v:'https://www.canva.com/d/6isbU_fqufHmEo7',e:'https://www.canva.com/d/lHO6ZwVVpQyU6Tg'}]};
+{id:'carrossel',t:'Carrossel: 3 sinais de que você está pronta para voltar ao mercado',f:'Carrossel 3:4',p:5,img:'arte-carrossel.jpg',v:'https://www.canva.com/design/DAHbrlt83HA/38vs7LgpjiOm6iTGFpTaKw/view',e:'https://www.canva.com/d/eQFkxQPy4ETsHGR'},
+{id:'convite',t:'Convite para a imersão Ela Por Inteiro',f:'Feed 3:4',p:1,img:'arte-convite.jpg',v:'https://www.canva.com/design/DAHbrpH33ec/qavCfYI65HOdRzSfgB4_og/view',e:'https://www.canva.com/d/I8oS4S5Ji8zdzHM'},
+{id:'contagem',t:'Contagem regressiva: faltam 20 dias',f:'Stories 9:16',p:1,img:'arte-contagem.jpg',v:'https://www.canva.com/design/DAHbrkJ0V74/rVAUZ4NX9gpL6hTVSHoRjw/view',e:'https://www.canva.com/d/lHO6ZwVVpQyU6Tg'}]};
 const R={
 painel(){
  const c=s=>db.videos.filter(v=>v.status==s).length;
@@ -261,6 +261,7 @@ drive(){
 marca(){
  const c=CANVA;db.artes=db.artes||{};
  return head('Artes','Peças criadas no Canva para o Instagram. Veja, aprove ou sugira melhorias.',`<a class="btn alt" style="text-decoration:none;display:inline-flex;align-items:center" href="${c.pasta}" target="_blank" rel="noopener">Abrir pasta no Canva</a>`)+
+ `<p class="sub" style="margin:-10px 0 18px;font-size:14px">Cada arte abre direto no Canva, sem login. A pasta completa abre para quem foi convidada no Canva.</p>`+
  `<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))">${c.itens.map(it=>{const a=db.artes[it.id]||{s:'aprovacao',c:[]};const ult=a.c[a.c.length-1];
  return `<article class="card" style="padding:14px;display:flex;flex-direction:column;gap:10px">
  <img src="${it.img}" alt="Prévia: ${esc(it.t)}" style="width:100%;aspect-ratio:255/269;object-fit:cover;object-position:top;border-radius:12px;border:1px solid var(--line);display:block">
