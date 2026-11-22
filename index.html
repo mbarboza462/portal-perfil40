@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-pal="nude">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#7d3326">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Perfil 40+">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Portal Perfil 40+</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Great+Vibes&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: acolhedor e elegante, de mulher para mulher
+   IDEA: um caderno de produção do Instituto Perfil 40+, com etapas que ela acompanha
+   PICTURE: a esteira de produção e o painel do Instagram no topo
+   COLOUR and TYPE: creme, vinho, dourado e rosa suave; Cormorant Garamond + Great Vibes + Inter
+   LAYOUT: barra lateral vinho no computador, abas embaixo no celular */
+:root{color-scheme:light dark;
+--bg:light-dark(#faf5ec,#1a1013);--card:light-dark(#fffdf9,#251719);--ink:light-dark(#2b1a1e,#f4e9e3);
+--mute:light-dark(#7a6468,#bda8aa);--line:light-dark(#ecdfcf,#3b272b);--brand:light-dark(#7a1f3d,#e7a3b5);
+--brand2:light-dark(#f6e4e6,#3a2029);--acc:light-dark(#9c7128,#d9b26a);--accs:light-dark(#f6ecd8,#3a2d18);--onbrand:light-dark(#fff,#1a1013);--side:#6e1b37;--gold:#e6c27a}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;line-height:1.1;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,4.6vw,44px)}h2{font-size:25px}h3{font-size:19px}
+.cur{font-family:"Great Vibes",cursive;font-weight:400;color:var(--acc);font-size:1.15em}
+button,input,select,textarea{font:inherit;font-size:16px;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+.side{background:var(--side);color:var(--onbrand);padding:24px 16px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh}
+.logo{display:flex;gap:10px;align-items:center;margin:0 8px 22px}
+.logo b{font-family:"Cormorant Garamond",serif;font-size:21px;line-height:1.1}.logo small{display:block;font-family:"Great Vibes",cursive;font-size:19px;color:var(--gold)}
+.nav a{display:flex;gap:12px;align-items:center;padding:11px 12px;border-radius:10px;color:inherit;text-decoration:none;font-weight:500;min-height:44px}
+.nav a[aria-current]{background:color-mix(in srgb,currentColor 14%,transparent)}
+.nav svg{width:20px;height:20px;flex:none}
+.side .who{margin-top:auto;font-size:13px;opacity:.85;padding:0 8px}
+main{padding:clamp(20px,3vw,40px) max(4vw,16px) 100px;max-width:1180px;width:100%}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:22px}
+.sub{color:var(--mute);margin:6px 0 0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{border:0;border-radius:10px;padding:10px 16px;min-height:44px;font-weight:600;background:var(--brand);color:var(--onbrand)}
+.btn.alt{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.hot{background:var(--acc);color:light-dark(#fff,#1a1013)}
+.btn.wa{background:#1fa855;color:#fff}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{border:0;background:none;border-radius:9px;padding:8px 12px;min-height:38px;font-weight:600;color:var(--mute)}
+.seg button[aria-pressed=true]{background:var(--brand2);color:var(--brand)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:16px 0 24px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi b{display:block;font:700 clamp(30px,4.4vw,40px)/1.05 "Cormorant Garamond",serif}.kpi span{color:var(--mute);font-size:14px}
+.belt{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.stage{background:var(--brand2);border-radius:12px;padding:12px 10px;min-height:150px;position:relative}
+.stage h3{font-size:13px;color:var(--brand);margin-bottom:8px;display:flex;justify-content:space-between}
+.chip{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:7px 9px;font-size:13px;margin-bottom:6px;line-height:1.3}
+.stage.warn{background:var(--accs)}.stage.warn h3{color:var(--acc)}
+.list{display:flex;flex-direction:column;gap:10px}
+.item{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;width:100%;text-align:left}
+.thumb{width:64px;height:64px;border-radius:10px;flex:none;display:grid;place-items:center;color:#fff}
+.thumb svg{width:22px;height:22px}
+.item .t{font-weight:600}.item .m{color:var(--mute);font-size:14px}
+.tag{display:inline-block;font-size:13px;font-weight:600;border-radius:999px;padding:3px 10px;white-space:nowrap;background:var(--brand2);color:var(--brand)}
+.tag.aprovacao,.tag.ajuste,.tag.escrito{background:var(--accs);color:var(--acc)}
+.tag.publicado,.tag.aprovado{background:var(--brand);color:var(--onbrand)}
+.filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px}
+.filters button{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;min-height:40px;font-weight:500}
+.filters button[aria-pressed=true]{background:var(--brand);color:var(--onbrand);border-color:var(--brand)}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 6px}
+input,select,textarea{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:11px 12px}
+textarea{min-height:110px;resize:vertical}
+dialog{border:0;border-radius:18px;padding:0;width:min(640px,100% - 24px);max-height:calc(100vh - 32px);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(8,20,18,.55)}
+.dlg{padding:22px}.dlg header{display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:12px}
+.x{border:0;background:var(--bg);border-radius:10px;width:44px;height:44px;font-size:22px;flex:none}
+.player{aspect-ratio:9/16;max-height:340px;margin:0 auto 14px;border-radius:14px;display:grid;place-items:center;color:#fff;text-align:center;padding:16px;font-size:14px}
+.steps{display:flex;gap:4px;margin:10px 0 16px}.steps i{flex:1;height:6px;border-radius:3px;background:var(--line)}.steps i.on{background:var(--brand)}
+.com{border-left:3px solid var(--line);padding:4px 0 4px 12px;margin:8px 0;font-size:15px}.com small{color:var(--mute);display:block}
+.empty{color:var(--mute);text-align:center;padding:30px 10px}
+.note{font-size:13px;color:var(--mute);margin-top:28px}
+.bell{position:relative}.bell em{position:absolute;top:-4px;right:-4px;background:var(--acc);color:#fff;font-style:normal;font-size:12px;border-radius:999px;padding:1px 6px}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:500;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+.week{margin-bottom:20px}.week h3{color:var(--mute);font-size:14px;margin-bottom:8px}
+.day{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.day b{font:700 26px/1 "Cormorant Garamond",serif;color:var(--brand);text-align:center}.day b small{display:block;font:500 12px Inter;color:var(--mute)}
+pre.rot{white-space:pre-wrap;font:15px/1.6 Inter;background:var(--bg);border-radius:12px;padding:14px;margin:0}
+:root[data-pal=rose]{--bg:light-dark(#fbf0ef,#1c1114);--card:light-dark(#fffafa,#28181c);--ink:light-dark(#3a1d26,#f6e8e8);--mute:light-dark(#8a6670,#c4a7ad);--line:light-dark(#f0d9da,#40282e);--brand:light-dark(#9b2c52,#f0a8bf);--brand2:light-dark(#fbe1e7,#46232f);--acc:light-dark(#a8744a,#e5b98f);--accs:light-dark(#f8e6d8,#3d2a1d);--side:#8e2549;--gold:#f3cfa6}
+:root[data-pal=noite]{color-scheme:dark;--bg:#1b0d13;--card:#26141b;--ink:#f6ece4;--mute:#c4aab0;--line:#3d232c;--brand:#e3b766;--brand2:#3a1f28;--acc:#e3b766;--accs:#3d2e17;--onbrand:#1b0d13;--side:#12080c;--gold:#e3b766}
+:root[data-pal=nude]{--bg:light-dark(#f5ede4,#1b1310);--card:light-dark(#fffaf4,#271c17);--ink:light-dark(#3b2620,#f2e6dc);--mute:light-dark(#86706a,#bfaa9f);--line:light-dark(#e6d6c6,#3d2c24);--brand:light-dark(#8a3b2e,#eba48f);--brand2:light-dark(#f2dfd3,#40261e);--acc:light-dark(#9a6a2c,#dcb06b);--accs:light-dark(#f2e4cc,#3b2c17);--side:#7d3326;--gold:#ecc58a}
+:root[data-pal=branco]{--bg:light-dark(#ffffff,#141012);--card:light-dark(#fcf8f6,#1f191b);--ink:light-dark(#231417,#f3ecea);--mute:light-dark(#72636a,#b3a6aa);--line:light-dark(#efe5e2,#33292c);--brand:light-dark(#6e1b37,#e7a3b5);--brand2:light-dark(#f8ecee,#33212a);--acc:light-dark(#b08a3e,#dcb86e);--accs:light-dark(#f7efdf,#382d19);--side:light-dark(#fcf8f6,#1f191b);--gold:#b08a3e;--sideink:light-dark(#3b2026,#f3ecea)}
+.side{color:var(--sideink,#fff)}
+.palbtn{position:fixed;right:16px;bottom:16px;z-index:6;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:10px 16px;min-height:44px;font-weight:600;box-shadow:0 6px 20px rgba(40,10,20,.18);display:flex;gap:8px;align-items:center}
+.palbtn i{width:18px;height:18px;border-radius:50%;background:conic-gradient(var(--side) 0 33%,var(--acc) 0 66%,var(--brand2) 0)}
+.pals{display:grid;gap:10px}.pal{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:center;border:2px solid var(--line);background:var(--bg);border-radius:14px;padding:10px;text-align:left;width:100%}
+.pal[aria-pressed=true]{border-color:var(--acc)}.pal .sw{display:flex;height:48px;border-radius:9px;overflow:hidden}.pal .sw span{flex:1}
+.pal b{font-family:"Cormorant Garamond",serif;font-size:21px;display:block;line-height:1.1}.pal small{color:var(--mute);font-size:14px}
+@media(max-width:700px){.palbtn{bottom:86px}}
+@media(max-width:860px){.belt{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){
+ .app{grid-template-columns:minmax(0,1fr)}
+ .side{position:fixed;bottom:0;top:auto;left:0;right:0;height:auto;flex-direction:row;padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:5}
+ .logo,.side .who{display:none}.nav{display:flex;width:100%;justify-content:space-around}
+ .nav a{flex-direction:column;gap:2px;font-size:11px;padding:6px 4px;flex:1;text-align:center;align-items:center}
+ .belt{grid-template-columns:repeat(2,minmax(0,1fr))}.stage{min-height:auto}}
+@media(prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="app">
+ <aside class="side">
+  <div class="logo"><svg width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="19.5" fill="none" stroke="var(--gold)" stroke-width="1.2"/><path d="M12 30c2-6 5-8 9-8s7 2 9 8M21 21a5 5 0 1 0 0-10a5 5 0 0 0 0 10" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M30 10c-3 1-4 4-3 6 2-1 3-3 3-6z" fill="none" stroke="var(--gold)"/></svg><div><b id="instNome">Instituto</b><small>A mulher que escolhe ser</small></div></div>
+  <nav class="nav" id="nav"></nav>
+  <div class="who" id="who"></div>
+ </aside>
+ <main id="main"></main>
+</div>
+<dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
+<button class="palbtn" data-act="cores" aria-label="Escolher cores"><i></i>Cores</button>
+<div class="toast" id="toast" role="status"></div>
+<script>
+{
+const ic={
+painel:'<path d="M4 13h6V4H4zm10 7h6v-9h-6zM4 20h6v-5H4zm10-11h6V4h-6z" fill="currentColor"/>',
+videos:'<path d="M4 6h11v12H4zm12 4l4-3v10l-4-3z" fill="currentColor"/>',
+roteiros:'<path d="M6 3h9l4 4v14H6zm3 7h7v2H9zm0 4h7v2H9z" fill="currentColor"/>',
+calendario:'<path d="M5 6h14v14H5zm0 4h14M9 3v5m6-5v5" stroke="currentColor" stroke-width="2" fill="none"/>',
+drive:'<path d="M8 3h8l6 11-4 7H6l-4-7z M8 3l6 11H2 M16 3l-6 11 4 7 M22 14H10" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/>',
+marca:'<path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2s-1-1.5-1-2.5S14 15 15.5 15H18a3 3 0 0 0 3-3c0-5-4-9-9-9z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="7.5" cy="11" r="1.3" fill="currentColor"/><circle cx="11" cy="7.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.3" fill="currentColor"/>',
+ajustes:'<circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4M5 5l3 3m8 8l3 3M5 19l3-3m8-8l3-3" stroke="currentColor" stroke-width="2"/>'};
+const views=[['painel','Painel'],['videos','Vídeos'],['drive','Drive'],['roteiros','Roteiros'],['calendario','Agenda'],['marca','Artes'],['ajustes','Ajustes']];
+const ST=[['recebido','Material recebido'],['edicao','Em edição'],['aprovacao','Aguardando aprovação'],['ajuste','Ajuste pedido'],['aprovado','Aprovado'],['publicado','Publicado']];
+const stName=s=>(ST.find(x=>x[0]==s)||[0,s])[1];
+const RS={briefing:'Briefing enviado',escrito:'Roteiro para aprovar',aprovado:'Roteiro aprovado'};
+const cores=['#7a1f3d','#a87a2e','#c98b9b','#5a1530','#8c5a3c','#b2546e'];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=d=>{if(!d)return'—';const[y,m,da]=d.split('-');return da+'/'+m};
+const hoje='2026-11-22';
+const seed=()=>({cfg:{nome:'Instituto Perfil 40+',whats:'5571999999999',editor:'Você (editor)'},
+videos:[
+{id:1,titulo:'Recomeçar aos 40 não é voltar atrás',tipo:'Reels',status:'aprovacao',prazo:'2026-11-24',post:'2026-11-26',drive:'https://drive.google.com/',versao:2,coments:[{a:'Instituto',t:'Pode deixar a palavra recomeçar em dourado no gancho?',q:'20/11'},{a:'Editor',t:'Feito! Versão 2 com gancho em cursiva dourada e tela final.',q:'21/11'}],cor:0},
+{id:2,titulo:'Convite: Ela Por Inteiro, 12/12 no Catussaba',tipo:'Reels',status:'edicao',prazo:'2026-11-25',post:'2026-11-27',drive:'https://drive.google.com/',versao:1,coments:[],cor:1},
+{id:3,titulo:'Depoimento: de volta ao mercado aos 47',tipo:'Reels',status:'recebido',prazo:'2026-11-29',post:'2026-12-02',drive:'https://drive.google.com/',versao:0,coments:[],cor:2},
+{id:4,titulo:'Bastidores da mentoria de novembro',tipo:'Reels',status:'ajuste',prazo:'2026-11-23',post:'2026-11-28',drive:'https://drive.google.com/',versao:1,coments:[{a:'Instituto',t:'Trocar a música por algo mais suave e cortar o começo.',q:'21/11'}],cor:3},
+{id:5,titulo:'Vagas da semana',tipo:'Reels',status:'aprovado',prazo:'2026-11-20',post:'2026-11-23',drive:'https://drive.google.com/',versao:2,coments:[],cor:4},
+{id:6,titulo:'Convite do evento no resort',tipo:'Reels',status:'publicado',prazo:'2026-11-12',post:'2026-11-14',drive:'https://drive.google.com/',versao:3,coments:[],cor:5},
+{id:7,titulo:'A mulher que escolhe ser',tipo:'Reels',status:'publicado',prazo:'2026-11-06',post:'2026-11-08',drive:'https://drive.google.com/',versao:1,coments:[],cor:0}],
+roteiros:[
+{id:1,titulo:'Faltam 10 dias para Ela Por Inteiro',formato:'Reels 45s',objetivo:'Vender as últimas vagas da imersão',status:'escrito',data:'2026-12-02',texto:'GANCHO (0–2s): Fundadora olhando para a câmera. Texto: "Você ainda está esperando a hora certa?" (palavra "hora" em cursiva dourada)\nCENA 2 (2–20s): "Dia 12 de dezembro, no Catussaba, vamos passar um dia inteiro cuidando da mulher que você escolhe ser."\nCENA 3 (20–40s): Cortes rápidos do último evento: abraços, anotações, risadas.\nCHAMADA (40–45s): "As vagas estão acabando. Garanta a sua no link da bio."\nTELA FINAL (3s): logo, @institutoperfil40, "Garanta sua vaga – link na bio".'},
+{id:2,titulo:'Por que contratar uma mulher 40+',formato:'Reels 60s',objetivo:'Atrair empresas parceiras para as vagas',status:'briefing',data:'2026-12-10',texto:''},
+{id:3,titulo:'Depoimento de mentorada',formato:'Reels 40s',objetivo:'Gerar confiança nas mentorias',status:'aprovado',data:'2026-11-30',texto:'GANCHO: "Aos 45 eu achei que ninguém ia me contratar."\nHistória dela em até 30s, com legenda palavra por palavra.\nCHAMADA: "Sua vez de recomeçar. Conheça as mentorias no link da bio."'}],
+drive:{conectado:false,conta:'',entrada:[
+{id:1,nome:'IMG_4821.MOV',tam:'312 MB',q:'21/11',por:'Fundadora',pedido:3},
+{id:2,nome:'catussaba-visita.MOV',tam:'284 MB',q:'21/11',por:'Fundadora',pedido:2},
+{id:3,nome:'depoimento-mentorada.mp4',tam:'540 MB',q:'22/11',por:'Fundadora',pedido:0},
+{id:4,nome:'logo-perfil40.png',tam:'1 MB',q:'18/11',por:'Fundadora',pedido:0}]},
+notif:[{t:'Vídeo "Recomeçar aos 40 não é voltar atrás" está pronto para aprovação',q:'21/11'},{t:'Roteiro "Faltam 10 dias para Ela Por Inteiro" foi enviado',q:'20/11'}]});
+let db;try{db=JSON.parse(localStorage.getItem('portal-p40'))}catch(e){}
+if(!db||!db.videos)db=seed();
+if(!db.drive)db.drive=seed().drive;
+const save=()=>{try{localStorage.setItem('portal-p40',JSON.stringify(db))}catch(e){}};
+let papel='inst';try{papel=localStorage.getItem('portal-papel')||'inst'}catch(e){}
+let filtro='todos';
+const M=document.getElementById('main'),D=document.getElementById('dlg'),DB=document.getElementById('dlgBody');
+const toast=m=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)};
+const notify=t=>{db.notif.unshift({t,q:fmt(hoje)});save()};
+const svg=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ic[n]}</svg>`;
+const thumb=v=>`<span class="thumb" style="background:${cores[v.cor%6]}">${svg('videos')}</span>`;
+const waLink=txt=>'https://wa.me/'+encodeURIComponent(db.cfg.whats)+'?text='+encodeURIComponent(txt);
+
+function head(t,s,extra=''){return `<div class="top"><div><h1>${t}</h1>${s?`<p class="sub">${s}</p>`:''}</div><div class="row">${extra}
+<div class="seg" role="group" aria-label="Ver como"><button data-papel="inst" aria-pressed="${papel=='inst'}">Instituto</button><button data-papel="ed" aria-pressed="${papel=='ed'}">Editor</button></div>
+<button class="btn alt bell" data-act="notifs" aria-label="Avisos">Avisos${db.notif.length?`<em>${db.notif.length}</em>`:''}</button></div></div>`}
+
+function item(v){return `<button class="item" data-video="${v.id}">${thumb(v)}<span style="flex:1"><span class="t">${esc(v.titulo)}</span><br><span class="m">${esc(v.tipo)} · entrega ${fmt(v.prazo)} · post ${fmt(v.post)}</span></span><span class="tag ${v.status}">${stName(v.status)}</span></button>`}
+
+const IG={meses:['Jun','Jul','Ago','Set','Out','Nov'],seg:[812,851,889,931,978,1040],alc:[5200,6100,5800,7400,8900,10600],eng:[3.1,3.4,3.2,3.6,4.0,4.6],posts:[15,14,16,17,18,20],
+top:[{t:'Convite: Ela Por Inteiro no Catussaba',k:'Reels',alc:4100,cur:286,com:41,comp:63,salv:52,cor:0},{t:'Recomeçar do zero (fundadoras)',k:'Reels',alc:700,cur:88,com:19,comp:12,salv:15,cor:2},{t:'Vagas da semana',k:'Carrossel',alc:540,cur:47,com:6,comp:21,salv:30,cor:1}]};
+const n=x=>x>=10000?(x/1000).toFixed(1).replace('.',',')+' mil':x.toLocaleString('pt-BR');
+const pct=(a,b)=>{const p=(a-b)/b*100;return `<span style="color:${p>=0?'var(--brand)':'var(--acc)'};font-weight:600">${p>=0?'▲':'▼'} ${Math.abs(p).toFixed(0)}%</span>`};
+function ig(){const L=IG.meses.length-1,i=IG,eng=p=>p.cur+p.com+p.comp+p.salv;const t=i.top[0];const mx=Math.max(...i.alc);
+ const med3=a=>(a[L-1]+a[L-2]+a[L-3])/3;
+ return `<section class="card" style="margin-bottom:24px"><div class="top" style="margin-bottom:6px"><div><h2>Instagram: alcance cresceu ${((i.alc[L]-i.alc[L-1])/i.alc[L-1]*100).toFixed(0)}% em novembro</h2><p class="sub">@institutoperfil40 · comparado a outubro e à média dos 3 meses anteriores</p></div></div>
+ <div class="kpis" style="margin:12px 0 18px">
+ <div class="kpi"><b>${n(i.seg[L])}</b><span>seguidores · ${pct(i.seg[L],i.seg[L-1])} vs out</span></div>
+ <div class="kpi"><b>${n(i.alc[L])}</b><span>contas alcançadas · ${pct(i.alc[L],i.alc[L-1])} vs out</span></div>
+ <div class="kpi"><b>${String(i.eng[L]).replace('.',',')}%</b><span>engajamento · ${pct(i.eng[L],med3(i.eng))} vs média 3m</span></div>
+ <div class="kpi"><b>${i.posts[L]}</b><span>postagens · ${pct(i.posts[L],i.posts[L-1])} vs out</span></div></div>
+ <div class="grid"><div><h3>Crescimento de seguidores</h3><div class="fig" style="min-height:220px;margin-top:8px"><svg id="igLine" role="img" aria-label="Seguidores de junho a novembro"></svg></div></div>
+ <div><h3>Alcance por mês</h3><div style="margin-top:10px">${i.meses.map((m,k)=>`<div style="display:grid;grid-template-columns:36px minmax(0,1fr) 64px;gap:8px;align-items:center;margin-bottom:9px;font-size:14px"><span style="color:var(--mute)">${m}</span><span style="background:var(--brand2);border-radius:6px;height:22px"><span style="display:block;height:100%;width:${(i.alc[k]/mx*100).toFixed(1)}%;border-radius:6px;background:${k==L?'var(--acc)':'var(--brand)'}"></span></span><span style="text-align:right;white-space:nowrap">${n(i.alc[k])}</span></div>`).join('')}</div></div></div>
+ <h3 style="margin-top:20px">Postagem mais engajada do mês</h3>
+ <div class="item" style="margin-top:10px;align-items:stretch"><span class="thumb" style="width:96px;height:auto;min-height:120px;background:linear-gradient(160deg,${cores[t.cor]},#2b1a1e)">${svg('videos')}</span>
+ <span style="flex:1"><span class="row" style="justify-content:space-between"><span class="t">${esc(t.t)}</span><span class="tag aprovado">${t.k}</span></span>
+ <span class="kpis" style="margin:10px 0 0;grid-template-columns:repeat(auto-fit,minmax(92px,1fr))">${[['alcance',t.alc],['curtidas',t.cur],['comentários',t.com],['compart.',t.comp],['salvos',t.salv]].map(([l,v])=>`<span class="kpi" style="padding:8px 10px"><b style="font-size:20px">${n(v)}</b><span>${l}</span></span>`).join('')}</span></span></div>
+ <div class="list" style="margin-top:10px">${i.top.slice(1).map((p,k)=>`<div class="item" style="padding:10px"><b style="font:700 22px "Cormorant Garamond",serif;color:var(--mute);width:28px;text-align:center">${k+2}º</b><span style="flex:1"><span class="t">${esc(p.t)}</span><br><span class="m">${p.k} · ${n(p.alc)} alcançadas · ${n(eng(p))} interações</span></span></div>`).join('')}</div>
+ <p class="sub" style="font-size:13px">Números de exemplo. Na versão final eles vêm direto da conta do Instagram do instituto.</p></section>`}
+function drawIG(){const s=document.getElementById('igLine');if(!s)return;const W=s.clientWidth,H=s.clientHeight;if(!W)return;
+ const p={l:W<520?8:44,r:14,t:24,b:28},v=IG.seg,mn=Math.min(...v)*.95,mx=Math.max(...v)*1.03;
+ const x=k=>p.l+k*(W-p.l-p.r)/(v.length-1),y=val=>p.t+(H-p.t-p.b)*(1-(val-mn)/(mx-mn));
+ const pts=v.map((val,k)=>x(k)+','+y(val)).join(' ');
+ let g='';if(W>=520)[mn,(mn+mx)/2,mx].forEach(t=>{g+=`<line x1="${p.l}" x2="${W-p.r}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)"/><text x="${p.l-6}" y="${y(t)+4}" text-anchor="end" font-size="12" fill="var(--mute)">${n(Math.round(t))}</text>`});
+ s.innerHTML=g+`<polygon points="${x(0)},${H-p.b} ${pts} ${x(v.length-1)},${H-p.b}" fill="var(--brand2)"/><polyline points="${pts}" fill="none" stroke="var(--brand)" stroke-width="3" stroke-linejoin="round"/>`+
+ v.map((val,k)=>`<circle cx="${x(k)}" cy="${y(val)}" r="${k==v.length-1?6:4}" fill="${k==v.length-1?'var(--acc)':'var(--brand)'}"/><text x="${x(k)}" y="${H-8}" text-anchor="middle" font-size="12" fill="var(--mute)">${IG.meses[k]}</text>`).join('')+
+ `<text x="${x(v.length-1)}" y="${y(v[v.length-1])-12}" text-anchor="end" font-size="13" font-weight="600" fill="var(--ink)">${n(v[v.length-1])}</text>`}
+const igRO=new ResizeObserver(drawIG);
+const PALS=[['classico','Clássico','Creme, vinho e dourado, fiel ao feed de hoje.',['#faf5ec','#6e1b37','#9c7128','#f6e4e6']],
+['rose','Rosé','Mais rosa e mais leve, com vinho vivo e dourado rosé. Mais feminino e acolhedor.',['#fbf0ef','#8e2549','#a8744a','#fbe1e7']],
+['noite','Noite de gala','Fundo vinho quase preto com dourado. Clima de evento, combina com o Ela Por Inteiro.',['#1b0d13','#12080c','#e3b766','#3a1f28']],
+['nude','Nude terracota','Tons de pele, terracota e cobre. Quente, natural e maduro.',['#f5ede4','#7d3326','#9a6a2c','#f2dfd3']],
+['branco','Branco moderno','Fundo branco, barra clara e vinho só nos destaques. Mais limpo e atual.',['#ffffff','#fcf8f6','#6e1b37','#b08a3e']]];
+let pal='nude';try{pal=localStorage.getItem('portal-p40-pal2')||'nude'}catch(e){}
+const setPal=p=>{pal=p;if(p=='classico')delete document.documentElement.dataset.pal;else document.documentElement.dataset.pal=p;
+ const m=document.querySelector('meta[name=theme-color]');if(m)m.content=(PALS.find(x=>x[0]==p)||PALS[0])[3][1];try{localStorage.setItem('portal-p40-pal2',p)}catch(e){}};
+setPal(pal);
+const palHTML=()=>`<div class="pals">${PALS.map(([k,n,d,c])=>`<button class="pal" data-pal="${k}" aria-pressed="${pal==k}"><span class="sw">${c.map(x=>`<span style="background:${x}"></span>`).join('')}</span><span><b>${n}</b><small>${d}</small></span></button>`).join('')}</div>`;
+const CANVA={pasta:'https://www.canva.com/folder/FAHbrZ4ioeM',itens:[
+{id:'carrossel',t:'Carrossel: 3 sinais de que você está pronta para voltar ao mercado',f:'Carrossel 3:4',p:5,img:'arte-carrossel.jpg',v:'https://www.canva.com/d/x5OFIqYECZH4-G6',e:'https://www.canva.com/d/eQFkxQPy4ETsHGR'},
+{id:'convite',t:'Convite para a imersão Ela Por Inteiro',f:'Feed 3:4',p:1,img:'arte-convite.jpg',v:'https://www.canva.com/d/k_HafnHzNFZGlxK',e:'https://www.canva.com/d/I8oS4S5Ji8zdzHM'},
+{id:'contagem',t:'Contagem regressiva: faltam 20 dias',f:'Stories 9:16',p:1,img:'arte-contagem.jpg',v:'https://www.canva.com/d/6isbU_fqufHmEo7',e:'https://www.canva.com/d/lHO6ZwVVpQyU6Tg'}]};
+const R={
+painel(){
+ const c=s=>db.videos.filter(v=>v.status==s).length;
+ const atn=db.videos.filter(v=>papel=='inst'?v.status=='aprovacao':['recebido','ajuste'].includes(v.status));
+ const ratn=db.roteiros.filter(r=>papel=='inst'?r.status=='escrito':r.status=='briefing');
+ return head(papel=='inst'?'Olá, <span class="cur">bem-vindas</span>':'Olá, <span class="cur">editor</span>','Tudo o que está em produção para o '+esc(db.cfg.nome)+', em um só lugar.',`<button class="btn hot" data-act="novo">+ Enviar material</button>`)+
+ `<div class="belt" aria-label="Esteira de produção">${ST.map(([k,n])=>`<div class="stage ${k=='aprovacao'||k=='ajuste'?'warn':''}"><h3><span>${n}</span><span>${c(k)}</span></h3>${db.videos.filter(v=>v.status==k).slice(0,3).map(v=>`<button class="chip" data-video="${v.id}">${esc(v.titulo)}</button>`).join('')}</div>`).join('')}</div>
+ <div class="kpis"><div class="kpi"><b>${c('edicao')+c('recebido')+c('ajuste')}</b><span>em produção</span></div><div class="kpi"><b>${c('aprovacao')}</b><span>aguardando aprovação</span></div><div class="kpi"><b>${c('publicado')}</b><span>publicados em novembro</span></div><div class="kpi"><b>${db.roteiros.length}</b><span>roteiros no mês</span></div></div>
+ ${ig()}
+ <div class="grid"><section class="card"><h2>Precisa da sua atenção</h2><div class="list" style="margin-top:12px">${atn.map(item).join('')||'<p class="empty">Nada pendente. Tudo em dia!</p>'}</div></section>
+ <section class="card"><h2>Roteiros</h2><div class="list" style="margin-top:12px">${ratn.map(r=>`<button class="item" data-rot="${r.id}"><span style="flex:1"><span class="t">${esc(r.titulo)}</span><br><span class="m">${esc(r.formato)}</span></span><span class="tag ${r.status}">${RS[r.status]}</span></button>`).join('')||'<p class="empty">Nenhum roteiro pendente.</p>'}</div></section></div>`},
+videos(){
+ const vs=db.videos.filter(v=>filtro=='todos'||v.status==filtro);
+ return head('Vídeos','Toque num vídeo para assistir, comentar e aprovar.',`<button class="btn hot" data-act="novo">+ Enviar material</button>`)+
+ `<div class="filters">${[['todos','Todos'],...ST].map(([k,n])=>`<button data-filtro="${k}" aria-pressed="${filtro==k}">${n}</button>`).join('')}</div><div class="list">${vs.map(item).join('')||'<p class="empty">Nenhum vídeo nesta etapa.</p>'}</div>`},
+drive(){
+ const dv=db.drive;
+ if(!dv.conectado)return head('Google Drive','Conecte o Drive que o instituto já usa. Os materiais e as entregas passam a aparecer aqui.')+
+ `<section class="card" style="max-width:620px"><h2>Conectar o Google Drive</h2><p class="sub">O portal vai usar duas pastas no Drive de vocês:</p>
+ <div class="list" style="margin:14px 0"><div class="item"><span class="thumb" style="background:var(--brand)">${svg('drive')}</span><span><span class="t">Entrada</span><br><span class="m">Onde a equipe sobe vídeos, fotos e áudios brutos.</span></span></div>
+ <div class="item"><span class="thumb" style="background:var(--acc)">${svg('videos')}</span><span><span class="t">Entregas</span><br><span class="m">Onde chegam os vídeos editados para assistir, aprovar ou sugerir melhorias.</span></span></div></div>
+ <form id="fDrive"><label for="dEmail">Conta Google do instituto</label><input id="dEmail" type="email" required placeholder="institutoperfil40@gmail.com">
+ <button class="btn" style="margin-top:14px">Entrar com Google</button></form><p class="sub" style="font-size:13px">Na prévia a conexão é simulada. Na versão final, abre a tela oficial de login do Google e o portal só acessa essas duas pastas.</p></section>`;
+ const ent=db.videos.filter(v=>v.versao>0&&v.status!='recebido'&&v.status!='edicao');
+ return head('Google Drive',`Conectado como ${esc(dv.conta)}`,`<button class="btn alt" data-act="desconectar">Desconectar</button>`)+
+ `<div class="grid"><section class="card"><div class="top" style="margin-bottom:8px"><h2>Entrada</h2><label class="btn hot" style="margin:0;display:inline-flex;align-items:center" for="up">+ Subir arquivos</label><input id="up" type="file" multiple accept="video/*,image/*,audio/*,.zip" hidden></div>
+ <p class="sub" style="margin-top:0">Materiais brutos enviados pela equipe.</p><div class="list" style="margin-top:12px">${dv.entrada.map(a=>{const p=db.videos.find(v=>v.id==a.pedido);
+ return `<div class="item"><span class="thumb" style="background:var(--brand2);color:var(--brand)">${svg('drive')}</span><span style="flex:1"><span class="t">${esc(a.nome)}</span><br><span class="m">${esc(a.tam)} · ${esc(a.por)} · ${esc(a.q)}</span>${p?`<br><span class="m">Vinculado a: ${esc(p.titulo)}</span>`:''}</span>${p?`<span class="tag ${p.status}">${stName(p.status)}</span>`:`<button class="btn alt" data-act="virar" data-id="${a.id}">Virar pedido</button>`}</div>`}).join('')}</div></section>
+ <section class="card"><h2>Entregas</h2><p class="sub">Assista, aprove ou sugira melhorias sem sair daqui.</p><div class="list" style="margin-top:12px">${ent.map(v=>{const ult=v.coments[v.coments.length-1];
+ return `<div class="card" style="padding:14px"><div class="row" style="justify-content:space-between"><span class="t" style="font-weight:600">${esc(v.titulo)} — v${v.versao}.mp4</span><span class="tag ${v.status}">${stName(v.status)}</span></div>
+ <div class="player" style="aspect-ratio:16/9;max-height:none;margin:10px 0;background:linear-gradient(160deg,${cores[v.cor%6]},#2b1a1e)" ><div>${svg('videos').replace('<svg','<svg width="36" height="36"')}<br>Prévia do vídeo do Drive</div></div>
+ ${ult?`<div class="com"><small>Último comentário · ${esc(ult.a)} · ${esc(ult.q)}</small>${esc(ult.t)}</div>`:''}
+ ${papel=='inst'&&v.status=='aprovacao'?`<label for="sg${v.id}">Sugestões de melhoria (opcional para aprovar)</label><textarea id="sg${v.id}" style="min-height:80px" placeholder="Ex.: aos 0:15, cortar a pausa; letra da legenda maior"></textarea>
+ <div class="row" style="margin-top:10px"><button class="btn" data-act="dAprovar" data-id="${v.id}">Aprovar</button><button class="btn alt" data-act="dSugerir" data-id="${v.id}">Sugerir melhorias</button></div>`:
+ `<button class="btn alt" style="margin-top:8px" data-video="${v.id}">Ver detalhes</button>`}</div>`}).join('')||'<p class="empty">Nenhuma entrega ainda.</p>'}</div></section></div>`},
+marca(){
+ const c=CANVA;db.artes=db.artes||{};
+ return head('Artes','Peças criadas no Canva para o Instagram. Veja, aprove ou sugira melhorias.',`<a class="btn alt" style="text-decoration:none;display:inline-flex;align-items:center" href="${c.pasta}" target="_blank" rel="noopener">Abrir pasta no Canva</a>`)+
+ `<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))">${c.itens.map(it=>{const a=db.artes[it.id]||{s:'aprovacao',c:[]};const ult=a.c[a.c.length-1];
+ return `<article class="card" style="padding:14px;display:flex;flex-direction:column;gap:10px">
+ <img src="${it.img}" alt="Prévia: ${esc(it.t)}" style="width:100%;aspect-ratio:255/269;object-fit:cover;object-position:top;border-radius:12px;border:1px solid var(--line);display:block">
+ <div><span class="tag ${a.s}">${a.s=='aprovacao'?'Aguardando aprovação':a.s=='aprovado'?'Aprovado':'Ajuste pedido'}</span><div class="t" style="font-weight:600;margin-top:8px">${esc(it.t)}</div><span style="color:var(--mute);font-size:14px">${esc(it.f)} · ${it.p} ${it.p>1?'páginas':'página'}</span></div>
+ ${ult?`<div class="com"><small>${esc(ult.a)} · ${esc(ult.q)}</small>${esc(ult.t)}</div>`:''}
+ ${papel=='inst'&&a.s!='aprovado'?`<label for="ar${it.id}" style="margin:0">Sugestões (opcional para aprovar)</label><textarea id="ar${it.id}" style="min-height:70px" placeholder="Ex.: trocar a foto da capa"></textarea>
+ <div class="row"><button class="btn" data-act="aAprovar" data-id="${it.id}">Aprovar</button><button class="btn alt" data-act="aSugerir" data-id="${it.id}">Sugerir melhorias</button></div>`:''}
+ <div class="row" style="margin-top:auto"><a class="btn alt" style="text-decoration:none;display:inline-flex;align-items:center" href="${it.v}" target="_blank" rel="noopener">Ver no Canva</a>${papel=='ed'?`<a class="btn alt" style="text-decoration:none;display:inline-flex;align-items:center" href="${it.e}" target="_blank" rel="noopener">Editar no Canva</a>`:''}</div></article>`}).join('')}</div>`},
+roteiros(){
+ return head('Roteiros','Peça um roteiro com um briefing curto. Ele chega aqui para você aprovar.',`<button class="btn hot" data-act="novoRot">+ Pedir roteiro</button>`)+
+ `<div class="list">${db.roteiros.map(r=>`<button class="item" data-rot="${r.id}"><span class="thumb" style="background:var(--brand2);color:var(--brand)">${svg('roteiros')}</span><span style="flex:1"><span class="t">${esc(r.titulo)}</span><br><span class="m">${esc(r.formato)} · ${esc(r.objetivo)} · para ${fmt(r.data)}</span></span><span class="tag ${r.status}">${RS[r.status]}</span></button>`).join('')}</div>`},
+calendario(){
+ const ev=[...db.videos.map(v=>({d:v.post,t:v.titulo,s:stName(v.status),k:v.tipo,v:v.id})),...db.roteiros.map(r=>({d:r.data,t:r.titulo,s:RS[r.status],k:'Roteiro',r:r.id}))].filter(e=>e.d).sort((a,b)=>a.d.localeCompare(b.d));
+ const dias=['dom','seg','ter','qua','qui','sex','sáb'];
+ const meses={'11':'Novembro','12':'Dezembro'};
+ const grupos={};ev.forEach(e=>{const m=e.d.slice(5,7);(grupos[m]=grupos[m]||[]).push(e)});
+ return head('Agenda de postagens','Quando cada conteúdo vai ao ar.')+Object.entries(grupos).map(([m,es])=>`<div class="week"><h3>${meses[m]||m}</h3>${es.map(e=>`<button class="day item" ${e.v?`data-video="${e.v}"`:`data-rot="${e.r}"`}><b>${e.d.slice(8)}<small>${dias[new Date(e.d+'T12:00').getDay()]}</small></b><span><span class="t">${esc(e.t)}</span><br><span class="m">${esc(e.k)} · ${esc(e.s)}</span></span></button>`).join('')}</div>`).join('')},
+ajustes(){
+ return head('Ajustes','Personalize a prévia.')+`<form class="card" id="cfg" style="max-width:560px"><label for="cNome">Nome do instituto</label><input id="cNome" value="${esc(db.cfg.nome)}">
+ <label for="cWa">WhatsApp para avisos (com DDI e DDD, só números)</label><input id="cWa" inputmode="numeric" value="${esc(db.cfg.whats)}">
+ <div class="row" style="margin-top:16px"><button class="btn">Salvar</button><button type="button" class="btn alt" data-act="reset">Restaurar dados de exemplo</button></div></form>
+ <section class="card" style="max-width:560px;margin-top:16px"><h2>Cores do portal</h2><p class="sub" style="margin-bottom:12px">Todas seguem a identidade do instituto.</p>${palHTML()}</section>
+ <section class="card" style="max-width:560px;margin-top:16px"><h2>Instalar no celular</h2><p class="sub">No iPhone: abra no Safari, toque em Compartilhar e depois em "Adicionar à Tela de Início". No Android: abra no Chrome, toque no menu ⋮ e depois em "Adicionar à tela inicial". Na versão final, o portal abre como aplicativo.</p></section>`}};
+
+function render(){
+ const v=(location.hash.slice(1)||'painel');const cur=R[v]?v:'painel';
+ document.getElementById('nav').innerHTML=views.map(([k,n])=>`<a href="#${k}" ${k==cur?'aria-current="page"':''}>${svg(k)}<span>${n}</span></a>`).join('');
+ document.getElementById('instNome').textContent=db.cfg.nome;
+ document.getElementById('who').textContent='Vendo como: '+(papel=='inst'?db.cfg.nome:'Editor');
+ M.innerHTML=R[cur]()+'<p class="note">Prévia com dados de exemplo. O que você muda aqui fica salvo só neste navegador.</p>';
+ igRO.disconnect();const s=document.getElementById('igLine');if(s){igRO.observe(s);drawIG()}
+}
+
+function abrirVideo(id){
+ const v=db.videos.find(x=>x.id==id);if(!v)return;
+ const idx=ST.findIndex(s=>s[0]==v.status);
+ const msg=`Olá! O vídeo "${v.titulo}" está ${v.status=='aprovacao'?'pronto para aprovação':'com status: '+stName(v.status)}. Acompanhe no portal.`;
+ let acoes='';
+ if(papel=='inst'&&v.status=='aprovacao')acoes=`<button class="btn" data-do="aprovar">Aprovar</button><button class="btn alt" data-do="ajuste">Pedir ajuste</button>`;
+ if(papel=='ed'){const prox={recebido:['edicao','Começar edição'],edicao:['aprovacao','Enviar para aprovação'],ajuste:['aprovacao','Enviar nova versão'],aprovado:['publicado','Marcar como publicado']}[v.status];
+  if(prox)acoes=`<button class="btn" data-do="st:${prox[0]}">${prox[1]}</button>`;
+  acoes+=`<a class="btn wa" style="text-decoration:none;display:inline-flex;align-items:center" href="${waLink(msg)}" target="_blank" rel="noopener">Avisar no WhatsApp</a>`}
+ DB.innerHTML=`<header><div><span class="tag ${v.status}">${stName(v.status)}</span><h2 style="margin-top:8px">${esc(v.titulo)}</h2><p class="sub">${esc(v.tipo)} · versão ${v.versao||'—'} · entrega ${fmt(v.prazo)} · post ${fmt(v.post)}</p></div><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>
+ <div class="steps" aria-label="Etapa ${idx+1} de 6">${ST.map((s,i)=>`<i class="${i<=idx?'on':''}"></i>`).join('')}</div>
+ <div class="player" style="background:linear-gradient(160deg,${cores[v.cor%6]},#2b1a1e)"><div>${svg('videos').replace('<svg','<svg width="44" height="44"')}<br>${v.versao?'Aqui toca a versão '+v.versao+' direto do Google Drive':'Material bruto recebido. A edição ainda não começou.'}</div></div>
+ <p><a href="${esc(v.drive)}" target="_blank" rel="noopener">Abrir pasta no Drive</a></p>
+ <div class="row" style="margin:12px 0">${acoes}</div>
+ ${papel=='ed'?`<p class="sub" style="font-size:13px">O botão abre o WhatsApp para ${esc(db.cfg.whats)} com a mensagem pronta.</p>`:''}
+ <h3 style="margin-top:16px">Comentários</h3>${v.coments.map(c=>`<div class="com"><small>${esc(c.a)} · ${esc(c.q)}</small>${esc(c.t)}</div>`).join('')||'<p class="sub">Nenhum comentário ainda.</p>'}
+ <form id="fCom"><label for="tCom">Escrever comentário</label><textarea id="tCom" placeholder="Ex.: aos 0:12, trocar a música"></textarea><button class="btn alt" style="margin-top:8px">Enviar comentário</button></form>`;
+ DB.dataset.video=id;delete DB.dataset.rot;if(!D.open)D.showModal();
+}
+
+function abrirRot(id){
+ const r=db.roteiros.find(x=>x.id==id);if(!r)return;
+ let corpo=r.texto?`<pre class="rot">${esc(r.texto)}</pre>`:'<p class="sub">O editor ainda está escrevendo este roteiro.</p>';
+ let acoes='';
+ if(papel=='inst'&&r.status=='escrito')acoes=`<button class="btn" data-do="rAprovar">Aprovar roteiro</button>`;
+ if(papel=='ed'&&r.status!='aprovado')corpo=`<label for="tRot">Roteiro</label><textarea id="tRot" style="min-height:220px">${esc(r.texto)}</textarea>`,acoes=`<button class="btn" data-do="rEnviar">Enviar para aprovação</button>`;
+ DB.innerHTML=`<header><div><span class="tag ${r.status}">${RS[r.status]}</span><h2 style="margin-top:8px">${esc(r.titulo)}</h2><p class="sub">${esc(r.formato)} · para ${fmt(r.data)}<br>Objetivo: ${esc(r.objetivo)}</p></div><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>${corpo}<div class="row" style="margin-top:14px">${acoes}</div>`;
+ DB.dataset.rot=id;delete DB.dataset.video;if(!D.open)D.showModal();
+}
+
+function form(tipo){
+ DB.innerHTML=tipo=='v'?`<header><h2>Enviar material</h2><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>
+ <form id="fNovo"><label for="nT">O que é o vídeo?</label><input id="nT" required placeholder="Ex.: Convite para a mentoria de janeiro">
+ <label for="nF">Formato</label><select id="nF"><option>Reels</option><option>Stories</option><option>YouTube</option><option>Feed</option></select>
+ <label for="nD">Link da pasta no Drive com o material</label><input id="nD" type="url" placeholder="https://drive.google.com/...">
+ <label for="nP">Quando quer postar?</label><input id="nP" type="date" value="2026-12-01">
+ <label for="nO">Observações</label><textarea id="nO" placeholder="Frase do gancho, trecho mais forte, o que não pode faltar"></textarea>
+ <button class="btn hot" style="margin-top:14px">Enviar para o editor</button></form>`:
+ `<header><h2>Pedir roteiro</h2><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>
+ <form id="fRot"><label for="rT">Tema</label><input id="rT" required placeholder="Ex.: 3 sinais de que é hora de recomeçar">
+ <label for="rF">Formato</label><select id="rF"><option>Reels 30s</option><option>Reels 60s</option><option>Stories</option><option>YouTube</option></select>
+ <label for="rO">Objetivo</label><input id="rO" placeholder="Ex.: vender vagas da imersão">
+ <label for="rD">Data desejada</label><input id="rD" type="date" value="2026-12-08">
+ <button class="btn hot" style="margin-top:14px">Enviar briefing</button></form>`;
+ delete DB.dataset.video;delete DB.dataset.rot;if(!D.open)D.showModal();
+}
+
+document.addEventListener('click',e=>{
+ const pb=e.target.closest('.pal');if(pb){setPal(pb.dataset.pal);document.querySelectorAll('.pal').forEach(x=>x.setAttribute('aria-pressed',x.dataset.pal==pal));toast('Paleta: '+(PALS.find(x=>x[0]==pal)||PALS[0])[1]);return}
+ const b=e.target.closest('[data-video],[data-rot],[data-act],[data-papel],[data-filtro],[data-do]');if(!b)return;
+ if(b.dataset.do){const d=b.dataset.do;
+  if(DB.dataset.video){const v=db.videos.find(x=>x.id==DB.dataset.video);
+   if(d=='aprovar'){v.status='aprovado';notify(`${db.cfg.nome} aprovou "${v.titulo}"`);toast('Vídeo aprovado!')}
+   else if(d=='ajuste'){const t=document.getElementById('tCom');if(!t.value.trim()){t.focus();toast('Escreva o ajuste no comentário');return}
+    v.coments.push({a:'Instituto',t:t.value.trim(),q:fmt(hoje)});v.status='ajuste';notify(`Ajuste pedido em "${v.titulo}"`);toast('Pedido de ajuste enviado')}
+   else if(d.startsWith('st:')){const s=d.slice(3);if(s=='aprovacao')v.versao=(v.versao||0)+1;v.status=s;notify(`"${v.titulo}": ${stName(s)}`);toast('Status atualizado')}
+   save();render();abrirVideo(v.id);return}
+  if(DB.dataset.rot){const r=db.roteiros.find(x=>x.id==DB.dataset.rot);
+   if(d=='rAprovar'){r.status='aprovado';notify(`Roteiro "${r.titulo}" aprovado`);toast('Roteiro aprovado!')}
+   if(d=='rEnviar'){const t=document.getElementById('tRot').value.trim();if(!t){toast('Escreva o roteiro primeiro');return}r.texto=t;r.status='escrito';notify(`Roteiro "${r.titulo}" pronto para aprovação`);toast('Roteiro enviado')}
+   save();render();abrirRot(r.id);return}}
+ if(b.dataset.video){e.preventDefault();abrirVideo(b.dataset.video);return}
+ if(b.dataset.rot){e.preventDefault();abrirRot(b.dataset.rot);return}
+ if(b.dataset.papel){papel=b.dataset.papel;try{localStorage.setItem('portal-papel',papel)}catch(x){}render();toast(papel=='inst'?'Vendo como o instituto':'Vendo como editor');return}
+ if(b.dataset.filtro){filtro=b.dataset.filtro;render();return}
+ const a=b.dataset.act;
+ if(a=='cores'){DB.innerHTML=`<header><div><h2>Escolha as cores</h2><p class="sub">Toque numa paleta para ver o portal inteiro com ela.</p></div><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>${palHTML()}`;delete DB.dataset.video;delete DB.dataset.rot;if(!D.open)D.showModal();return}
+ if(a=='aAprovar'||a=='aSugerir'){const id=b.dataset.id,it=CANVA.itens.find(x=>x.id==id);db.artes=db.artes||{};const ar=db.artes[id]=db.artes[id]||{s:'aprovacao',c:[]};const t=document.getElementById('ar'+id).value.trim();
+  if(a=='aSugerir'&&!t){document.getElementById('ar'+id).focus();toast('Escreva as sugestões');return}
+  if(t)ar.c.push({a:'Instituto',t,q:fmt(hoje)});ar.s=a=='aAprovar'?'aprovado':'ajuste';
+  notify(a=='aAprovar'?`Arte "${it.t}" aprovada`:`Melhorias sugeridas na arte "${it.t}"`);save();render();toast(a=='aAprovar'?'Arte aprovada!':'Sugestões enviadas');return}
+ if(a=='desconectar'){db.drive.conectado=false;save();render();toast('Drive desconectado')}
+ if(a=='virar'){const arq=db.drive.entrada.find(x=>x.id==b.dataset.id);form('v');document.getElementById('nT').value=arq.nome.replace(/\.[^.]+$/,'').replace(/[-_]/g,' ');document.getElementById('nD').value='https://drive.google.com/';DB.dataset.arq=arq.id;return}
+ if(a=='dAprovar'||a=='dSugerir'){const v=db.videos.find(x=>x.id==b.dataset.id);const t=document.getElementById('sg'+v.id).value.trim();
+  if(a=='dSugerir'&&!t){document.getElementById('sg'+v.id).focus();toast('Escreva as sugestões');return}
+  if(t)v.coments.push({a:'Instituto',t,q:fmt(hoje)});
+  v.status=a=='dAprovar'?'aprovado':'ajuste';notify(a=='dAprovar'?`${db.cfg.nome} aprovou "${v.titulo}" pelo Drive`:`Melhorias sugeridas em "${v.titulo}"`);
+  save();render();toast(a=='dAprovar'?'Vídeo aprovado!':'Sugestões enviadas ao editor');return}
+ if(a=='fechar')D.close();
+ if(a=='novo')form('v');
+ if(a=='novoRot')form('r');
+ if(a=='reset'){db=seed();save();render();toast('Dados de exemplo restaurados')}
+ if(a=='notifs'){DB.innerHTML=`<header><h2>Avisos</h2><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>${db.notif.map(n=>`<div class="com"><small>${esc(n.q)}</small>${esc(n.t)}</div>`).join('')||'<p class="sub">Sem avisos.</p>'}<button class="btn alt" style="margin-top:12px" data-act="limpar">Marcar todos como lidos</button>`;delete DB.dataset.video;delete DB.dataset.rot;if(!D.open)D.showModal()}
+ if(a=='limpar'){db.notif=[];save();render();D.close()}
+});
+
+document.addEventListener('submit',e=>{e.preventDefault();const f=e.target;
+ if(f.id=='fCom'){const t=document.getElementById('tCom').value.trim();if(!t)return;const v=db.videos.find(x=>x.id==DB.dataset.video);v.coments.push({a:papel=='inst'?'Instituto':'Editor',t,q:fmt(hoje)});save();abrirVideo(v.id);toast('Comentário enviado')}
+ if(f.id=='fNovo'){const id=Math.max(0,...db.videos.map(v=>v.id))+1;const p=document.getElementById('nP').value;
+  const d=new Date((p||'2026-12-01')+'T12:00');d.setDate(d.getDate()-2);
+  db.videos.unshift({id,titulo:document.getElementById('nT').value.trim(),tipo:document.getElementById('nF').value,status:'recebido',prazo:d.toISOString().slice(0,10),post:p,drive:document.getElementById('nD').value||'https://drive.google.com/',versao:0,coments:document.getElementById('nO').value.trim()?[{a:'Instituto',t:document.getElementById('nO').value.trim(),q:fmt(hoje)}]:[],cor:id});
+  if(DB.dataset.arq){const arq=db.drive.entrada.find(x=>x.id==DB.dataset.arq);if(arq)arq.pedido=id;delete DB.dataset.arq}
+  notify('Novo material recebido: '+db.videos[0].titulo);save();D.close();location.hash='videos';render();toast('Material enviado! O editor foi avisado.')}
+ if(f.id=='fRot'){const id=Math.max(0,...db.roteiros.map(r=>r.id))+1;db.roteiros.unshift({id,titulo:document.getElementById('rT').value.trim(),formato:document.getElementById('rF').value,objetivo:document.getElementById('rO').value.trim()||'—',status:'briefing',data:document.getElementById('rD').value,texto:''});
+  notify('Novo pedido de roteiro: '+db.roteiros[0].titulo);save();D.close();location.hash='roteiros';render();toast('Briefing enviado!')}
+ if(f.id=='fDrive'){db.drive.conectado=true;db.drive.conta=document.getElementById('dEmail').value.trim();save();render();toast('Drive conectado!')}
+ if(f.id=='cfg'){db.cfg.nome=document.getElementById('cNome').value.trim()||'Instituto Perfil 40+';db.cfg.whats=document.getElementById('cWa').value.replace(/\D/g,'');save();render();toast('Ajustes salvos')}
+});
+D.addEventListener('click',e=>{if(e.target===D)D.close()});
+D.addEventListener('close',()=>{delete DB.dataset.arq});
+document.addEventListener('change',e=>{if(e.target.id!='up')return;const fs=[...e.target.files];if(!fs.length)return;
+ let id=Math.max(0,...db.drive.entrada.map(a=>a.id));
+ fs.forEach(f=>db.drive.entrada.unshift({id:++id,nome:f.name,tam:f.size>1048576?Math.round(f.size/1048576)+' MB':Math.max(1,Math.round(f.size/1024))+' KB',q:fmt(hoje),por:papel=='inst'?db.cfg.nome:'Editor',pedido:0}));
+ notify(fs.length+' arquivo(s) novo(s) na pasta Entrada');save();render();toast('Arquivos enviados para a pasta Entrada')});
+window.addEventListener('hashchange',render);
+render();
+}
+</script>
+<script>if("serviceWorker"in navigator&&location.protocol=="https:"&&!location.hostname.endsWith("claude.ai")){try{navigator.serviceWorker.register("sw.js").catch(()=>{})}catch(e){}}</script>
+</body>
+</html>
