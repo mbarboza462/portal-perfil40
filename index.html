@@ -425,11 +425,11 @@ document.addEventListener('click',e=>{
  const wa=e.target.closest('[data-wa]');if(wa){const ta=document.getElementById(wa.dataset.ta),t=(ta&&ta.value||'').trim(),k=wa.dataset.wa,id=wa.dataset.id;
   if(!t){e.preventDefault();if(ta)ta.focus();toast('Escreva o ajuste antes de enviar');return}
   let nome='';
-  if(k=='video'||k=='drive'){const v=db.videos.find(x=>x.id==id);nome='o vídeo "'+v.titulo+'"';v.coments.push({a:'Instituto',t,q:fmt(hoje)});v.status='ajuste'}
-  if(k=='arte'){const it=CANVA.itens.find(x=>x.id==id);db.artes=db.artes||{};const ar=db.artes[id]=db.artes[id]||{s:'aprovacao',c:[]};ar.c.push({a:'Instituto',t,q:fmt(hoje)});ar.s='ajuste';nome='a arte "'+it.t+'"'}
-  if(k=='rot'){const r=db.roteiros.find(x=>x.id==id);r.status='ajuste';r.notas=(r.notas?r.notas+'\n':'')+'Ajuste pedido: '+t;nome='o roteiro "'+r.titulo+'"'}
-  wa.href=waLink(`Olá! Ajuste em ${nome} (${db.cfg.nome}):\n${t}`);
-  notify('Ajuste pedido em '+nome);save();toast('Abrindo o WhatsApp…');setTimeout(()=>{render();if(D.open)D.close()},400);return}
+  if(k=='video'||k=='drive'){const v=db.videos.find(x=>x.id==id);nome='no vídeo "'+v.titulo+'"';v.coments.push({a:'Instituto',t,q:fmt(hoje)});v.status='ajuste'}
+  if(k=='arte'){const it=CANVA.itens.find(x=>x.id==id);db.artes=db.artes||{};const ar=db.artes[id]=db.artes[id]||{s:'aprovacao',c:[]};ar.c.push({a:'Instituto',t,q:fmt(hoje)});ar.s='ajuste';nome='na arte "'+it.t+'"'}
+  if(k=='rot'){const r=db.roteiros.find(x=>x.id==id);r.status='ajuste';r.notas=(r.notas?r.notas+'\n':'')+'Ajuste pedido: '+t;nome='no roteiro "'+r.titulo+'"'}
+  wa.href=waLink(`Olá! Ajuste ${nome} (${db.cfg.nome}):\n${t}`);
+  notify('Ajuste pedido '+nome);save();toast('Abrindo o WhatsApp…');setTimeout(()=>{render();if(D.open)D.close()},400);return}
  const pb=e.target.closest('.pal');if(pb){setPal(pb.dataset.pal);document.querySelectorAll('.pal').forEach(x=>x.setAttribute('aria-pressed',x.dataset.pal==pal));toast('Paleta: '+(PALS.find(x=>x[0]==pal)||PALS[0])[1]);return}
  const b=e.target.closest('[data-video],[data-rot],[data-act],[data-papel],[data-filtro],[data-do],[data-mes]');if(!b)return;
  if(b.dataset.do){const d=b.dataset.do;
