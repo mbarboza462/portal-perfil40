@@ -325,17 +325,17 @@ calendario(){
  const reels=db.videos.filter(v=>v.tipo=='Reels'&&(v.post||'').slice(5,7)==m).sort((a,b)=>a.post.localeCompare(b.post));
  const ex=db.extras[m]||0,inc=PLANO+ex,usados=reels.length,livres=Math.max(0,inc-usados),fora=Math.max(0,usados-inc);
  const dia=d=>`<b class="d">${d.slice(8)}<small>${dias[new Date(d+'T12:00').getDay()]}</small></b>`;
- const slot=(v,k)=>{const extra=k>=PLANO,over=k>=inc;return `<button class="slot ${over?'over':extra?'extra':''}" data-video="${v.id}">${dia(v.post)}<span><span class="t" style="font-weight:600">${esc(v.titulo)}</span><br><span class="m" style="color:var(--mute);font-size:13px">Reel ${k+1}${over?' · fora do plano':extra?' · extra '+brl(EXTRA):''} · ${stName(v.status)}</span>${msteps(STK,v.status)}</span></button>`};
- const vazio=k=>`<button class="slot free ${k>=PLANO?'extra':''}" data-act="agendar" data-mes="${m}"><b class="d">+</b><span><span class="t" style="font-weight:600">Reel ${k+1} livre</span><br><span class="m" style="color:var(--mute);font-size:13px">${k>=PLANO?'Extra '+brl(EXTRA)+' · ':''}Toque para agendar</span></span></button>`;
+ const slot=(v,k)=>{const extra=k>=PLANO,over=k>=inc;return `<button class="slot ${over?'over':extra?'extra':''}" data-video="${v.id}">${dia(v.post)}<span><span class="t" style="font-weight:600">${esc(v.titulo)}</span><br><span class="m" style="color:var(--mute);font-size:13px">Reels ${k+1}${over?' · fora do plano':extra?' · extra '+brl(EXTRA):''} · ${stName(v.status)}</span>${msteps(STK,v.status)}</span></button>`};
+ const vazio=k=>`<button class="slot free ${k>=PLANO?'extra':''}" data-act="agendar" data-mes="${m}"><b class="d">+</b><span><span class="t" style="font-weight:600">Reels ${k+1} livre</span><br><span class="m" style="color:var(--mute);font-size:13px">${k>=PLANO?'Extra '+brl(EXTRA)+' · ':''}Toque para agendar</span></span></button>`;
  const outros=[...db.videos.filter(v=>v.tipo!='Reels'&&(v.post||'').slice(5,7)==m).map(v=>({d:v.post,t:v.titulo,k:v.tipo,s:stName(v.status),st:msteps(STK,v.status),a:`data-video="${v.id}"`})),
   ...db.roteiros.filter(r=>(r.data||'').slice(5,7)==m).map(r=>({d:r.data,t:r.titulo,k:'Roteiro',s:RS[r.status],st:msteps(RSTEP,r.status=='ajuste'?'enviado':r.status),a:`data-rot="${r.id}"`}))].sort((a,b)=>a.d.localeCompare(b.d));
  return head('Agenda','O plano de cada mês, com a etapa de cada conteúdo.')+
  `<div class="filters">${['11','12','01'].map(k=>`<button data-mes="${k}" aria-pressed="${m==k}">${MESES[k]}</button>`).join('')}</div>
  <div class="plan"><span class="pill">Plano: ${PLANO} Reels por mês</span><span class="pill">Agendados: ${usados} de ${inc}</span>${ex?`<span class="pill" style="border-color:var(--acc)">Extras: ${ex} · ${brl(ex*EXTRA)}</span>`:''}
- <button class="btn hot" data-act="extra" data-mes="${m}">+ Reel extra</button>${ex&&livres?`<button class="btn alt" data-act="extraMenos" data-mes="${m}">− Tirar extra</button>`:''}</div>
- ${fora?`<p class="err" style="margin:-6px 0 14px">${fora} Reel(s) passaram do plano deste mês. Adicione ${fora>1?'extras':'um extra'} (${brl(EXTRA)} cada) ou mude a data.</p>`:''}
+ <button class="btn hot" data-act="extra" data-mes="${m}">+ Reels extra</button>${ex&&livres?`<button class="btn alt" data-act="extraMenos" data-mes="${m}">− Tirar extra</button>`:''}</div>
+ ${fora?`<p class="err" style="margin:-6px 0 14px">${fora} Reels passaram do plano deste mês. Adicione ${fora>1?'extras':'um extra'} (${brl(EXTRA)} cada) ou mude a data.</p>`:''}
  <div class="slots">${reels.map(slot).join('')}${Array.from({length:livres},(_,i)=>vazio(usados+i)).join('')}</div>
- <p class="hint" style="margin-top:12px">Cada Reel extra custa ${brl(EXTRA)} e entra na conta do mês. Vídeos de até 1min30.</p>
+ <p class="hint" style="margin-top:12px">Cada Reels extra custa ${brl(EXTRA)} e entra na conta do mês. Vídeos de até 1min30.</p>
  ${outros.length?`<h2 style="margin:26px 0 10px">Outros conteúdos de ${MESES[m]}</h2><div class="list">${outros.map(o=>`<button class="day item" ${o.a}><b>${o.d.slice(8)}<small>${dias[new Date(o.d+'T12:00').getDay()]}</small></b><span><span class="t">${esc(o.t)}</span><br><span class="m">${esc(o.k)} · ${esc(o.s)}</span>${o.st}</span></button>`).join('')}</div>`:''}`},
 refs(){
  return head('Referências','Conteúdos que vocês gostaram e querem algo nesse estilo. Mandem o link ou subam o arquivo.',`<button class="btn hot" data-act="novaRef">+ Adicionar referência</button>`)+
@@ -414,8 +414,8 @@ function form(tipo,data){
  <label for="fA">Ou suba um arquivo (print, foto ou vídeo)</label><input id="fA" type="file" accept="image/*,video/*">
  <label for="fG">O que vocês gostaram?</label><textarea id="fG" style="min-height:90px" placeholder="O estilo, a música, os cortes, a legenda, a luz..."></textarea>
  <p class="err" id="fErr" hidden></p><button class="btn hot" style="margin-top:14px">Salvar referência</button></form>`;
- if(tipo=='extra')DB.innerHTML=`<header><div><h2>Adicionar Reel extra</h2><p class="sub">${MESES[data]} já tem ${PLANO} Reels no plano.</p></div><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>
- <div class="kpi" style="margin:4px 0 14px"><b>+ ${brl(EXTRA)}</b><span>por Reel extra, somado à conta de ${MESES[data]}</span></div>
+ if(tipo=='extra')DB.innerHTML=`<header><div><h2>Adicionar Reels extra</h2><p class="sub">${MESES[data]} já tem ${PLANO} Reels no plano.</p></div><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>
+ <div class="kpi" style="margin:4px 0 14px"><b>+ ${brl(EXTRA)}</b><span>por Reels extra, somado à conta de ${MESES[data]}</span></div>
  <p class="sub">Você já tem ${db.extras[data]||0} extra(s) neste mês. Com este, o valor extra do mês fica em ${brl(((db.extras[data]||0)+1)*EXTRA)}.</p>
  <div class="row" style="margin-top:14px"><button class="btn hot" data-act="extraOk" data-mes="${data}">Confirmar extra</button><button class="btn alt" data-act="fechar">Cancelar</button></div>`;
  delete DB.dataset.video;delete DB.dataset.rot;if(!D.open)D.showModal();
@@ -450,7 +450,7 @@ document.addEventListener('click',e=>{
  const a=b.dataset.act;
  if(!a&&b.dataset.mes){agMes=b.dataset.mes;render();return}
  if(a=='extra'){form('extra',b.dataset.mes);return}
- if(a=='extraOk'){const m=b.dataset.mes;db.extras[m]=(db.extras[m]||0)+1;notify(`Reel extra adicionado em ${MESES[m]} (+${brl(EXTRA)})`);save();D.close();render();toast('Reel extra adicionado');return}
+ if(a=='extraOk'){const m=b.dataset.mes;db.extras[m]=(db.extras[m]||0)+1;notify(`Reels extra adicionado em ${MESES[m]} (+${brl(EXTRA)})`);save();D.close();render();toast('Reels extra adicionado');return}
  if(a=='extraMenos'){const m=b.dataset.mes;db.extras[m]=Math.max(0,(db.extras[m]||0)-1);save();render();toast('Extra removido');return}
  if(a=='agendar'){const m=b.dataset.mes;form('v',(m=='01'?'2027':'2026')+'-'+m+'-'+(m=='11'?'29':'05'));return}
  if(a=='novaRef'){form('ref');return}
