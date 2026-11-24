@@ -66,6 +66,8 @@ main{padding:clamp(20px,3vw,40px) max(4vw,16px) 100px;max-width:1180px;width:100
 .thumb{width:64px;height:64px;border-radius:10px;flex:none;display:grid;place-items:center;color:#fff}
 .thumb svg{width:22px;height:22px}
 .item .t{font-weight:600}.item .m{color:var(--mute);font-size:14px}
+.item{flex-wrap:wrap;row-gap:8px}.item>span[style*="flex:1"]{min-width:min(170px,100%)}.item>.tag{margin-left:auto}
+.item>span[style*="flex:1"] .m{display:inline}
 .tag{display:inline-block;font-size:13px;font-weight:600;border-radius:999px;padding:3px 10px;white-space:nowrap;background:var(--brand2);color:var(--brand)}
 .tag.aprovacao,.tag.ajuste,.tag.escrito{background:var(--accs);color:var(--acc)}
 .tag.publicado,.tag.aprovado{background:var(--brand);color:var(--onbrand)}
@@ -118,6 +120,22 @@ details.card>summary::-webkit-details-marker{display:none}details.card>summary::
 .refimg{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;border:1px solid var(--line);display:block;background:var(--brand2)}
 .refph{width:100%;aspect-ratio:4/5;border-radius:12px;display:grid;place-items:center;text-align:center;color:#fff;padding:14px;font-weight:600}
 .hint{font-size:13px;color:var(--mute);margin:6px 0 0}
+.btn.sm{min-height:40px;padding:6px 12px;font-size:14px}
+.btn.del{background:var(--card);color:#b3261e;border:1px solid #e3b1ac}
+.mini{display:flex;gap:6px;flex-wrap:wrap}
+.kcard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 9px 9px;margin-bottom:7px;display:grid;grid-template-columns:22px minmax(0,1fr);gap:2px 6px;cursor:grab;user-select:none}
+.kcard .kh{grid-row:span 3;display:grid;place-items:start center;color:var(--mute);font-size:18px;line-height:1;touch-action:none;cursor:grab;padding-top:2px}
+.kcard .kt{border:0;background:none;padding:0;text-align:left;font-weight:600;font-size:13px;line-height:1.3;color:var(--ink);cursor:pointer}
+.kcard .km{font-size:12px;color:var(--mute)}.kcard .btn.sm{min-height:32px;padding:4px 10px;font-size:12px;justify-self:start;margin-top:4px}
+.stage{transition:outline-color .15s}.stage.over{outline:2px dashed var(--acc);outline-offset:2px}
+.stage .kempty{font-size:12px;color:var(--mute);text-align:center;padding:10px 4px;border:1px dashed var(--line);border-radius:9px}
+.kghost{position:fixed;z-index:30;pointer-events:none;opacity:.92;transform:rotate(2deg);box-shadow:0 10px 28px rgba(40,10,20,.25)}
+.fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}.fotos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block}
+.fotos label{margin:0;position:relative;font-weight:500;font-size:12px}.fotos label input{position:absolute;top:4px;left:4px;width:18px;height:18px}
+.thumb.vid,.player.vid{background-color:#000;background-position:center;background-size:cover;position:relative}
+.thumb.vid::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-35%,-50%);border-style:solid;border-width:9px 0 9px 15px;border-color:transparent transparent transparent rgba(255,255,255,.92);filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.player.vid .play{width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,.45);display:grid;place-items:center}
+.player.vid .play::after{content:'';border-style:solid;border-width:13px 0 13px 22px;border-color:transparent transparent transparent #fff;margin-left:6px}
 @media(max-width:860px){.belt{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:700px){
  .app{grid-template-columns:minmax(0,1fr)}
@@ -157,22 +175,34 @@ const ST=[['recebido','Material recebido'],['edicao','Em edição'],['aprovacao'
 const stName=s=>(ST.find(x=>x[0]==s)||[0,s])[1];
 const RS={enviado:'Aguardando melhoria',melhorado:'Versão melhorada pronta',ajuste:'Ajuste pedido',aprovado:'Aprovado'};
 const RSTEP=['enviado','melhorado','aprovado'];
+const PA={pedido:'Pedido recebido',criacao:'Em criação',aprovacao:'Para aprovar',ajuste:'Ajuste pedido',aprovado:'Aprovada'};
+const PSTEP=['pedido','criacao','aprovacao','aprovado'];
+const TIPOS_ARTE=['Post de feed','Carrossel','Stories','Capa de Reels','Convite ou flyer','Outro'];
 const PLANO=6,EXTRA=18.5,WA_PADRAO='5571999644173',IGURL='https://www.instagram.com/institutoperfil40/';
 const brl=v=>'R$ '+v.toFixed(2).replace('.',',');
-const MESES={'11':'Novembro','12':'Dezembro','01':'Janeiro'};
+const MN=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const mesNome=k=>MN[+k.slice(5,7)-1]+' de '+k.slice(0,4);const mesCurto=k=>MN[+k.slice(5,7)-1];
+const addMes=(k,n)=>{const d=new Date(+k.slice(0,4),+k.slice(5,7)-1+n,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')};
+const MESES=new Proxy({},{get:(t,k)=>typeof k=='string'&&/^\d{4}-\d{2}$/.test(k)?mesCurto(k):k});
 const cores=['#7a1f3d','#a87a2e','#c98b9b','#5a1530','#8c5a3c','#b2546e'];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=d=>{if(!d)return'—';const[y,m,da]=d.split('-');return da+'/'+m};
-const hoje='2026-11-22';
+const hoje=(()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')})();
+const MES_ATUAL=hoje.slice(0,7);
+const addDia=(d,n)=>{const x=new Date(d+'T12:00');x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
 const seed=()=>({cfg:{nome:'Instituto Perfil 40+',whats:WA_PADRAO,editor:'Você (editor)'},
 videos:[
-{id:1,titulo:'Recomeçar aos 40 não é voltar atrás',tipo:'Reels',status:'aprovacao',prazo:'2026-11-24',post:'2026-11-26',drive:'https://drive.google.com/',versao:2,coments:[{a:'Instituto',t:'Pode deixar a palavra recomeçar em dourado no gancho?',q:'20/11'},{a:'Editor',t:'Feito! Versão 2 com gancho em cursiva dourada e tela final.',q:'21/11'}],cor:0},
-{id:2,titulo:'Convite: Ela Por Inteiro, 12/12 no Catussaba',tipo:'Reels',status:'edicao',prazo:'2026-11-25',post:'2026-11-27',drive:'https://drive.google.com/',versao:1,coments:[],cor:1},
+{id:1,titulo:'Recomeçar aos 40 não é voltar atrás',thumb:'ig-Df3DJBdOZPg.jpg',tipo:'Reels',status:'aprovacao',prazo:'2026-11-24',post:'2026-11-26',drive:'https://drive.google.com/',versao:2,coments:[{a:'Instituto',t:'Pode deixar a palavra recomeçar em dourado no gancho?',q:'20/11'},{a:'Editor',t:'Feito! Versão 2 com gancho em cursiva dourada e tela final.',q:'21/11'}],cor:0},
+{id:2,titulo:'Convite: Ela Por Inteiro, 12/12 no Catussaba',thumb:'ig-DffFiV8xzYA.jpg',tipo:'Reels',status:'edicao',prazo:'2026-11-25',post:'2026-11-27',drive:'https://drive.google.com/',versao:1,coments:[],cor:1},
 {id:3,titulo:'Depoimento: de volta ao mercado aos 47',tipo:'Reels',status:'recebido',prazo:'2026-11-29',post:'2026-12-02',drive:'https://drive.google.com/',versao:0,coments:[],cor:2},
 {id:4,titulo:'Bastidores da mentoria de novembro',tipo:'Reels',status:'ajuste',prazo:'2026-11-23',post:'2026-11-28',drive:'https://drive.google.com/',versao:1,coments:[{a:'Instituto',t:'Trocar a música por algo mais suave e cortar o começo.',q:'21/11'}],cor:3},
 {id:5,titulo:'Vagas da semana',tipo:'Reels',status:'aprovado',prazo:'2026-11-20',post:'2026-11-23',drive:'https://drive.google.com/',versao:2,coments:[],cor:4},
-{id:6,titulo:'Convite do evento no resort',tipo:'Reels',status:'publicado',prazo:'2026-11-12',post:'2026-11-14',drive:'https://drive.google.com/',versao:3,coments:[],cor:5},
-{id:7,titulo:'A mulher que escolhe ser',tipo:'Reels',status:'publicado',prazo:'2026-11-06',post:'2026-11-08',drive:'https://drive.google.com/',versao:1,coments:[],cor:0}],
+{id:6,titulo:'Convite do evento no resort',thumb:'arte-convite.jpg',tipo:'Reels',status:'publicado',prazo:'2026-11-12',post:'2026-11-14',drive:'https://drive.google.com/',versao:3,coments:[],cor:5},
+{id:7,titulo:'A mulher que escolhe ser',thumb:'ig-Dfk4SwtuWs8.jpg',tipo:'Reels',status:'publicado',prazo:'2026-11-06',post:'2026-11-08',drive:'https://drive.google.com/',versao:1,coments:[],cor:0},
+{id:8,titulo:'Dicas de currículo para mulheres 40+',tipo:'Reels',status:'publicado',prazo:'2026-10-07',post:'2026-10-09',drive:'https://drive.google.com/',versao:2,coments:[],cor:3,obs:''},
+{id:9,titulo:'Depoimento: recomeço aos 52',tipo:'Reels',status:'publicado',prazo:'2026-10-14',post:'2026-10-16',drive:'https://drive.google.com/',versao:1,coments:[],cor:4,obs:''},
+{id:10,titulo:'Bastidores da mentoria de outubro',tipo:'Reels',status:'publicado',prazo:'2026-10-21',post:'2026-10-23',drive:'https://drive.google.com/',versao:1,coments:[],cor:1,obs:''},
+{id:11,titulo:'Vagas da semana: outubro',tipo:'Stories',status:'publicado',prazo:'2026-10-27',post:'2026-10-28',drive:'https://drive.google.com/',versao:1,coments:[],cor:2,obs:''}],
 roteiros:[
 {id:1,titulo:'Faltam 10 dias para Ela Por Inteiro',formato:'Reels 45s',objetivo:'Vender as últimas vagas da imersão',status:'melhorado',data:'2026-12-02',
 original:'Oi meninas! Faltam 10 dias pro nosso evento Ela Por Inteiro. Vai ser dia 12 de dezembro no Catussaba, vai ser um dia muito especial, com palestras, almoço, troca entre mulheres e muito mais. Ainda tem vagas, então quem quiser participar é só clicar no link da bio. Esperamos vocês lá, vai ser lindo!',
@@ -184,9 +214,12 @@ original:'Hoje eu queria falar sobre por que as empresas deveriam contratar mulh
 original:'A Carla vai contar como foi a mentoria pra ela e como ela conseguiu o emprego depois de 2 anos parada.',
 melhorado:'GANCHO: "Aos 45 eu achei que ninguém ia me contratar."\n\nHistória dela em até 30s, com legenda palavra por palavra.\n\nCHAMADA: "Sua vez de recomeçar. Conheça as mentorias no link da bio."',notas:'Abri com a frase mais forte dela e cortei a apresentação.'}],
 refs:[
-{id:1,titulo:'Reels com legenda palavra por palavra',link:'https://www.instagram.com/',gostou:'O ritmo dos cortes e a legenda grande no centro da tela.',status:'usando',img:'',arq:'',q:'20/11',cor:0},
-{id:2,titulo:'Depoimento com luz quente',link:'https://www.youtube.com/',gostou:'A luz dourada, o fundo desfocado e a música baixinha.',status:'nova',img:'',arq:'',q:'21/11',cor:2}],
+{id:1,titulo:'Mulher no base jump falando sobre estar pronta',link:'https://www.instagram.com/institutoperfil40/reel/Df-kF7SOC5Y/',gostou:'O tom de reflexão e a legenda grande no topo. Queremos algo nesse estilo com as fundadoras.',status:'usando',img:'ig-Df-kF7SOC5Y.jpg',arq:'',q:'20/11',cor:0},
+{id:2,titulo:'Selfie das fundadoras na orla',link:'https://www.instagram.com/institutoperfil40/reel/Dfk4SwtuWs8/',gostou:'A luz natural do fim de tarde e a frase em cursiva grande.',status:'nova',img:'ig-Dfk4SwtuWs8.jpg',arq:'',q:'21/11',cor:2}],
 extras:{},
+pedArtes:[
+{id:1,tipo:'Post de feed',titulo:'Vagas da semana: dezembro',texto:'3 vagas abertas: assistente administrativa, recepcionista e vendedora. Link na bio.',data:'2026-12-03',obs:'Usar a foto da Tatiana.',ref:'',status:'criacao',canva:'',img:'',q:'23/11',coments:[]},
+{id:2,tipo:'Stories',titulo:'Últimas vagas do Ela Por Inteiro',texto:'Últimas vagas! 12/12 no Catussaba. Garanta a sua.',data:'2026-12-05',obs:'',ref:'',status:'pedido',canva:'',img:'',q:'23/11',coments:[]}],
 drive:{conectado:false,conta:'',entrada:[
 {id:1,nome:'IMG_4821.MOV',tam:'312 MB',q:'21/11',por:'Fundadora',pedido:3},
 {id:2,nome:'catussaba-visita.MOV',tam:'284 MB',q:'21/11',por:'Fundadora',pedido:2},
@@ -196,9 +229,11 @@ notif:[{t:'Vídeo "Recomeçar aos 40 não é voltar atrás" está pronto para ap
 let db;try{db=JSON.parse(localStorage.getItem('portal-p40'))}catch(e){}
 if(!db||!db.videos)db=seed();
 if(!db.drive)db.drive=seed().drive;
-if(!db.refs)db.refs=seed().refs;if(!db.extras)db.extras={};
+{const ex={};Object.entries(db.extras||{}).forEach(([k,v])=>{ex[/^\d{2}$/.test(k)?(k=='01'?'2027':'2026')+'-'+k:k]=v});db.extras=ex}
+if(!db.refs||db.refs.some(r=>r.link=='https://www.instagram.com/'||r.link=='https://www.youtube.com/'))db.refs=seed().refs;if(!db.extras)db.extras={};if(!db.pedArtes)db.pedArtes=seed().pedArtes;
 if(db.roteiros.some(r=>!('original' in r)))db.roteiros=seed().roteiros;
 if(!db.cfg.whats||db.cfg.whats=='5571999999999')db.cfg.whats=WA_PADRAO;
+{const sd=seed().videos;sd.filter(x=>x.id>=8&&x.id<=11).forEach(x=>{if(!db.videos.some(v=>v.id==x.id))db.videos.push(x)});db.videos.forEach(v=>{const o=sd.find(x=>x.id==v.id&&x.titulo==v.titulo);if(o&&o.thumb&&!v.thumb)v.thumb=o.thumb})}
 const save=()=>{try{localStorage.setItem('portal-p40',JSON.stringify(db))}catch(e){}};
 let papel='inst';try{papel=localStorage.getItem('portal-papel')||'inst'}catch(e){}
 let filtro='todos';
@@ -206,7 +241,8 @@ const M=document.getElementById('main'),D=document.getElementById('dlg'),DB=docu
 const toast=m=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)};
 const notify=t=>{db.notif.unshift({t,q:fmt(hoje)});save()};
 const svg=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ic[n]}</svg>`;
-const thumb=v=>`<span class="thumb" style="background:${cores[v.cor%6]}">${svg('videos')}</span>`;
+const thumb=v=>v.thumb?`<span class="thumb vid" style="background-image:url(${v.thumb})" role="img" aria-label="Miniatura do vídeo"></span>`:`<span class="thumb" style="background:${cores[v.cor%6]}">${svg('videos')}</span>`;
+const player=(v,txt,extra='')=>v.thumb?`<div class="player vid" style="background-image:url(${v.thumb});${extra}" role="img" aria-label="Miniatura do vídeo"><span class="play"></span></div>`:`<div class="player" style="background:linear-gradient(160deg,${cores[v.cor%6]},#2b1a1e);${extra}"><div>${svg('videos').replace('<svg','<svg width="40" height="40"')}<br>${txt}</div></div>`;
 const waLink=txt=>'https://wa.me/'+encodeURIComponent(db.cfg.whats)+'?text='+encodeURIComponent(txt);
 const waFmt=()=>{const w=db.cfg.whats.replace(/^55/,'');return w.length>=10?`(${w.slice(0,2)}) ${w.slice(2,-4)}-${w.slice(-4)}`:w};
 const waBtn=(kind,id,ta,label='Pedir ajuste no WhatsApp')=>`<a class="btn wa" style="text-decoration:none;display:inline-flex;align-items:center" href="${waLink('')}" target="_blank" rel="noopener" data-wa="${kind}" data-id="${id}" data-ta="${ta}">${label}</a>`;
@@ -216,7 +252,10 @@ const STK=ST.map(x=>x[0]);
 const dur=f=>new Promise(res=>{if(!f||!/^video\//.test(f.type))return res(0);try{const u=URL.createObjectURL(f),v=document.createElement('video');v.preload='metadata';v.muted=true;
  const done=d=>{URL.revokeObjectURL(u);res(d)};v.onloadedmetadata=()=>done(isFinite(v.duration)?v.duration:0);v.onerror=()=>done(0);setTimeout(()=>done(0),8000);v.src=u}catch(e){res(0)}});
 const mmss=sec=>Math.floor(sec/60)+':'+String(Math.round(sec%60)).padStart(2,'0');
-let agMes='11';
+
+const edBtns=(k,id)=>`<span class="mini"><button class="btn alt sm" data-act="editar" data-k="${k}" data-id="${id}">Editar</button><button class="btn del sm" data-act="excluir" data-k="${k}" data-id="${id}">Excluir</button></span>`;
+const find=(k,id)=>({v:db.videos,f:db.drive.entrada,r:db.roteiros,ref:db.refs,pa:db.pedArtes}[k]||[]).find(x=>x.id==id);
+const KN={v:'o material do vídeo',f:'o arquivo',r:'o roteiro',ref:'a referência',pa:'o pedido de arte'};
 
 function head(t,s,extra=''){return `<div class="top"><div><h1>${t}</h1>${s?`<p class="sub">${s}</p>`:''}</div><div class="row">${extra}
 <div class="seg" role="group" aria-label="Ver como"><button data-papel="inst" aria-pressed="${papel=='inst'}">Instituto</button><button data-papel="ed" aria-pressed="${papel=='ed'}">Editor</button></div>
@@ -225,13 +264,13 @@ function head(t,s,extra=''){return `<div class="top"><div><h1>${t}</h1>${s?`<p c
 function item(v){return `<button class="item" data-video="${v.id}">${thumb(v)}<span style="flex:1"><span class="t">${esc(v.titulo)}</span><br><span class="m">${esc(v.tipo)} · entrega ${fmt(v.prazo)} · post ${fmt(v.post)}</span></span><span class="tag ${v.status}">${stName(v.status)}</span></button>`}
 
 const IG={meses:['Jun','Jul','Ago','Set','Out','Nov'],seg:[812,851,889,931,978,1040],alc:[5200,6100,5800,7400,8900,10600],eng:[3.1,3.4,3.2,3.6,4.0,4.6],posts:[15,14,16,17,18,20],
-top:[{t:'Convite: Ela Por Inteiro no Catussaba',k:'Reels',alc:4100,cur:286,com:41,comp:63,salv:52,cor:0},{t:'Recomeçar do zero (fundadoras)',k:'Reels',alc:700,cur:88,com:19,comp:12,salv:15,cor:2},{t:'Vagas da semana',k:'Carrossel',alc:540,cur:47,com:6,comp:21,salv:30,cor:1}]};
+top:[{t:'Convite: Ela Por Inteiro',k:'Reels',alc:4100,cur:286,com:41,comp:63,salv:52,cor:0,u:'https://www.instagram.com/institutoperfil40/reel/DffFiV8xzYA/',img:'ig-DffFiV8xzYA.jpg'},{t:'Você não precisa recomeçar do zero',k:'Reels',alc:700,cur:88,com:19,comp:12,salv:15,cor:2,u:'https://www.instagram.com/institutoperfil40/reel/Df3DJBdOZPg/',img:'ig-Df3DJBdOZPg.jpg'},{t:'Você está esperando o quê para se escolher?',k:'Reels',alc:540,cur:47,com:6,comp:21,salv:30,cor:1,u:'https://www.instagram.com/institutoperfil40/reel/Dfk4SwtuWs8/',img:'ig-Dfk4SwtuWs8.jpg'}]};
 const n=x=>x>=10000?(x/1000).toFixed(1).replace('.',',')+' mil':x.toLocaleString('pt-BR');
 const pct=(a,b)=>{const p=(a-b)/b*100;return `<span style="color:${p>=0?'var(--brand)':'var(--acc)'};font-weight:600">${p>=0?'▲':'▼'} ${Math.abs(p).toFixed(0)}%</span>`};
 function ig(){const L=IG.meses.length-1,i=IG,eng=p=>p.cur+p.com+p.comp+p.salv;const t=i.top[0];const mx=Math.max(...i.alc);
  const med3=a=>(a[L-1]+a[L-2]+a[L-3])/3;
  return `<section class="card" style="margin-bottom:24px"><div class="top" style="margin-bottom:6px"><div><h2>Instagram: alcance cresceu ${((i.alc[L]-i.alc[L-1])/i.alc[L-1]*100).toFixed(0)}% em novembro</h2><p class="sub"><a href="${IGURL}" target="_blank" rel="noopener" style="color:inherit">@institutoperfil40</a> · comparado a outubro e à média dos 3 meses anteriores</p></div>
- <div class="row"><a class="btn alt" style="text-decoration:none;display:inline-flex;align-items:center" href="${IGURL}" target="_blank" rel="noopener">Abrir perfil</a><a class="btn alt" style="text-decoration:none;display:inline-flex;align-items:center" href="${IGURL}reels/" target="_blank" rel="noopener">Ver Reels</a></div></div>
+ <div class="row"><a class="btn alt" style="text-decoration:none;display:inline-flex;align-items:center" href="${IGURL}" target="_blank" rel="noopener">Abrir perfil</a><a class="btn alt" style="text-decoration:none;display:inline-flex;align-items:center" href="${i.top[0].u}" target="_blank" rel="noopener">Ver post mais engajado</a></div></div>
  <div class="kpis" style="margin:12px 0 18px">
  <div class="kpi"><b>${n(i.seg[L])}</b><span>seguidores · ${pct(i.seg[L],i.seg[L-1])} vs out</span></div>
  <div class="kpi"><b>${n(i.alc[L])}</b><span>contas alcançadas · ${pct(i.alc[L],i.alc[L-1])} vs out</span></div>
@@ -240,12 +279,12 @@ function ig(){const L=IG.meses.length-1,i=IG,eng=p=>p.cur+p.com+p.comp+p.salv;co
  <div class="grid"><div><h3>Crescimento de seguidores</h3><div class="fig" style="min-height:220px;margin-top:8px"><svg id="igLine" role="img" aria-label="Seguidores de junho a novembro"></svg></div></div>
  <div><h3>Alcance por mês</h3><div style="margin-top:10px">${i.meses.map((m,k)=>`<div style="display:grid;grid-template-columns:36px minmax(0,1fr) 64px;gap:8px;align-items:center;margin-bottom:9px;font-size:14px"><span style="color:var(--mute)">${m}</span><span style="background:var(--brand2);border-radius:6px;height:22px"><span style="display:block;height:100%;width:${(i.alc[k]/mx*100).toFixed(1)}%;border-radius:6px;background:${k==L?'var(--acc)':'var(--brand)'}"></span></span><span style="text-align:right;white-space:nowrap">${n(i.alc[k])}</span></div>`).join('')}</div></div></div>
  <h3 style="margin-top:20px">Postagem mais engajada do mês</h3>
- <div class="item" style="margin-top:10px;align-items:stretch"><span class="thumb" style="width:96px;height:auto;min-height:120px;background:linear-gradient(160deg,${cores[t.cor]},#2b1a1e)">${svg('videos')}</span>
+ <div class="item" style="margin-top:10px;align-items:stretch"><a href="${t.u}" target="_blank" rel="noopener" style="flex:none;width:110px"><img src="${t.img}" alt="Capa do post: ${esc(t.t)}" style="width:110px;aspect-ratio:9/16;object-fit:cover;border-radius:12px;display:block;border:1px solid var(--line)"></a>
  <span style="flex:1"><span class="row" style="justify-content:space-between"><span class="t">${esc(t.t)}</span><span class="tag aprovado">${t.k}</span></span>
  <span class="kpis" style="margin:10px 0 0;grid-template-columns:repeat(auto-fit,minmax(92px,1fr))">${[['alcance',t.alc],['curtidas',t.cur],['comentários',t.com],['compart.',t.comp],['salvos',t.salv]].map(([l,v])=>`<span class="kpi" style="padding:8px 10px"><b style="font-size:20px">${n(v)}</b><span>${l}</span></span>`).join('')}</span>
- <a href="${IGURL}" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;font-weight:600;color:var(--brand)">Ver no Instagram →</a></span></div>
- <div class="list" style="margin-top:10px">${i.top.slice(1).map((p,k)=>`<a class="item" style="padding:10px;text-decoration:none;color:inherit" href="${IGURL}" target="_blank" rel="noopener"><b style="font:700 22px "Cormorant Garamond",serif;color:var(--mute);width:28px;text-align:center">${k+2}º</b><span style="flex:1"><span class="t">${esc(p.t)}</span><br><span class="m">${p.k} · ${n(p.alc)} alcançadas · ${n(eng(p))} interações</span></span><span class="m">Abrir →</span></a>`).join('')}</div>
- <p class="sub" style="font-size:13px">Números de exemplo. Na versão final eles vêm direto da conta do Instagram do instituto, e cada postagem abre o post certo.</p></section>`}
+ <a href="${t.u}" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;font-weight:600;color:var(--brand)">Abrir este post no Instagram →</a></span></div>
+ <div class="list" style="margin-top:10px">${i.top.slice(1).map((p,k)=>`<a class="item" style="padding:10px;text-decoration:none;color:inherit" href="${p.u}" target="_blank" rel="noopener"><b style="font:700 22px "Cormorant Garamond",serif;color:var(--mute);width:28px;text-align:center">${k+2}º</b><img src="${p.img}" alt="Capa do post: ${esc(p.t)}" style="width:72px;aspect-ratio:9/16;object-fit:cover;border-radius:10px;flex:none;border:1px solid var(--line)"><span style="flex:1"><span class="t">${esc(p.t)}</span><br><span class="m">${p.k} · ${n(p.alc)} alcançadas · ${n(eng(p))} interações</span></span><span class="m" style="color:var(--brand);font-weight:600;white-space:nowrap">Abrir post →</span></a>`).join('')}</div>
+ <p class="sub" style="font-size:13px">Capas e links são dos posts reais. Os números são de exemplo; na versão final eles vêm direto da conta do Instagram do instituto.</p></section>`}
 function drawIG(){const s=document.getElementById('igLine');if(!s)return;const W=s.clientWidth,H=s.clientHeight;if(!W)return;
  const p={l:W<520?8:44,r:14,t:24,b:28},v=IG.seg,mn=Math.min(...v)*.95,mx=Math.max(...v)*1.03;
  const x=k=>p.l+k*(W-p.l-p.r)/(v.length-1),y=val=>p.t+(H-p.t-p.b)*(1-(val-mn)/(mx-mn));
@@ -273,18 +312,20 @@ const R={
 painel(){
  const c=s=>db.videos.filter(v=>v.status==s).length;
  const atn=db.videos.filter(v=>papel=='inst'?v.status=='aprovacao':['recebido','ajuste'].includes(v.status));
+ const patn=db.pedArtes.filter(p=>papel=='inst'?p.status=='aprovacao':['pedido','ajuste'].includes(p.status));
  const ratn=db.roteiros.filter(r=>papel=='inst'?r.status=='melhorado':['enviado','ajuste'].includes(r.status));
- const nm=db.videos.filter(v=>v.tipo=='Reels'&&(v.post||'').slice(5,7)=='11').length,inc=PLANO+(db.extras['11']||0);
+ const nm=db.videos.filter(v=>v.tipo=='Reels'&&(v.post||'').slice(0,7)==MES_ATUAL).length,inc=PLANO+(db.extras[MES_ATUAL]||0);
  return head(papel=='inst'?'Olá, <span class="cur">bem-vindas</span>':'Olá, <span class="cur">editor</span>','Tudo o que está em produção para o '+esc(db.cfg.nome)+', em um só lugar.',`<button class="btn hot" data-act="novo">+ Enviar material</button>`)+
- `<div class="kpis"><div class="kpi"><b>${c('edicao')+c('recebido')+c('ajuste')}</b><span>em produção</span></div><div class="kpi"><b>${c('aprovacao')}</b><span>aguardando aprovação</span></div><div class="kpi"><b>${c('publicado')}</b><span>publicados em novembro</span></div><a class="kpi" href="#calendario" style="text-decoration:none;color:inherit"><b>${nm} de ${inc}</b><span>Reels do plano em novembro</span></a></div>
+ `<div class="kpis"><div class="kpi"><b>${c('edicao')+c('recebido')+c('ajuste')}</b><span>em produção</span></div><div class="kpi"><b>${c('aprovacao')}</b><span>aguardando aprovação</span></div><div class="kpi"><b>${db.videos.filter(v=>v.status=='publicado'&&(v.post||'').slice(0,7)==MES_ATUAL).length}</b><span>publicados em ${mesCurto(MES_ATUAL).toLowerCase()}</span></div><a class="kpi" href="#calendario" style="text-decoration:none;color:inherit"><b>${nm} de ${inc}</b><span>Reels do plano em ${mesCurto(MES_ATUAL).toLowerCase()}</span></a></div>
  ${ig()}
- <div class="grid"><section class="card"><h2>Precisa da sua atenção</h2><div class="list" style="margin-top:12px">${atn.map(item).join('')||'<p class="empty">Nada pendente. Tudo em dia!</p>'}</div></section>
+ <div class="grid"><section class="card"><h2>Precisa da sua atenção</h2><div class="list" style="margin-top:12px">${atn.map(item).join('')}${patn.map(p=>`<button class="item" data-goto="marca"><span class="thumb" style="background:var(--brand2);color:var(--brand)">${svg('marca')}</span><span style="flex:1"><span class="t">${esc(p.titulo)}</span><br><span class="m">Arte · ${esc(p.tipo)}</span></span><span class="tag ${p.status=='aprovacao'?'escrito':p.status}">${PA[p.status]}</span></button>`).join('')}${atn.length+patn.length?'':'<p class="empty">Nada pendente. Tudo em dia!</p>'}</div></section>
  <section class="card"><h2>Roteiros para melhorar</h2><div class="list" style="margin-top:12px">${ratn.map(r=>`<button class="item" data-rot="${r.id}"><span style="flex:1"><span class="t">${esc(r.titulo)}</span><br><span class="m">${esc(r.formato)}</span></span><span class="tag ${r.status}">${RS[r.status]}</span></button>`).join('')||'<p class="empty">Nenhum roteiro pendente.</p>'}</div></section></div>`},
 videos(){
  const vs=db.videos.filter(v=>filtro=='todos'||v.status==filtro);
  return head('Vídeos','Toque num vídeo para assistir, comentar e aprovar.',`<button class="btn hot" data-act="novo">+ Enviar material</button>`)+
  `<div class="filters">${[['todos','Todos'],...ST].map(([k,n])=>`<button data-filtro="${k}" aria-pressed="${filtro==k}">${n}</button>`).join('')}</div><div class="list">${vs.map(item).join('')||'<p class="empty">Nenhum vídeo nesta etapa.</p>'}</div>
- <details class="card" style="margin-top:22px"><summary>Quadro de produção</summary><div class="belt" style="margin-top:12px" aria-label="Quadro de produção">${ST.map(([k,n])=>{const vv=db.videos.filter(v=>v.status==k);return `<div class="stage ${k=='aprovacao'||k=='ajuste'?'warn':''}"><h3><span>${n}</span><span>${vv.length}</span></h3>${vv.map(v=>`<button class="chip" data-video="${v.id}">${esc(v.titulo)}</button>`).join('')}</div>`}).join('')}</div></details>`},
+ <section class="card" style="margin-top:22px"><h2>Quadro de produção</h2><p class="sub" style="margin-bottom:12px">Arraste os cards entre as etapas. No celular, arraste pela alça ⠿.</p>
+ <div class="belt" aria-label="Quadro de produção">${ST.map(([k,n])=>{const vv=db.videos.filter(v=>v.status==k);return `<div class="stage ${k=='aprovacao'||k=='ajuste'?'warn':''}" data-st="${k}"><h3><span>${n}</span><span>${vv.length}</span></h3>${vv.map(v=>`<div class="kcard" data-id="${v.id}"><span class="kh" data-drag aria-label="Arrastar ${esc(v.titulo)}">⠿</span><button class="kt" data-video="${v.id}">${esc(v.titulo)}</button><span class="km">${esc(v.tipo)} · post ${fmt(v.post)}</span><button class="btn alt sm" data-act="editar" data-k="v" data-id="${v.id}">Editar</button></div>`).join('')||'<div class="kempty">Solte aqui</div>'}</div>`}).join('')}</div></section>`},
 drive(){
  const dv=db.drive;
  if(!dv.conectado)return head('Google Drive','Conecte o Drive que o instituto já usa. Os materiais e as entregas passam a aparecer aqui.')+
@@ -297,17 +338,29 @@ drive(){
  return head('Google Drive',`Conectado como ${esc(dv.conta)}`,`<button class="btn alt" data-act="desconectar">Desconectar</button>`)+
  `<div class="grid"><section class="card"><div class="top" style="margin-bottom:8px"><h2>Entrada</h2><label class="btn hot" style="margin:0;display:inline-flex;align-items:center" for="up">+ Subir arquivos</label><input id="up" type="file" multiple accept="video/*,image/*,audio/*,.zip" hidden></div>
  <p class="sub" style="margin-top:0">Materiais brutos enviados pela equipe. Vídeos de até 1min30.</p><p class="err" id="upErr" hidden></p><div class="list" style="margin-top:12px">${dv.entrada.map(a=>{const p=db.videos.find(v=>v.id==a.pedido);
- return `<div class="item"><span class="thumb" style="background:var(--brand2);color:var(--brand)">${svg('drive')}</span><span style="flex:1"><span class="t">${esc(a.nome)}</span><br><span class="m">${esc(a.tam)} · ${esc(a.por)} · ${esc(a.q)}</span>${p?`<br><span class="m">Vinculado a: ${esc(p.titulo)}</span>`:''}</span>${p?`<span class="tag ${p.status}">${stName(p.status)}</span>`:`<button class="btn alt" data-act="virar" data-id="${a.id}">Virar pedido</button>`}</div>`}).join('')}</div></section>
+ return `<div class="item">${a.thumb?`<span class="thumb vid" style="background-image:url(${a.thumb})" role="img" aria-label="Miniatura"></span>`:`<span class="thumb" style="background:var(--brand2);color:var(--brand)">${svg('drive')}</span>`}<span style="flex:1"><span class="t">${esc(a.nome)}</span><br><span class="m">${esc(a.tam)} · ${esc(a.por)} · ${esc(a.q)}</span>${p?`<br><span class="m">Vinculado a: ${esc(p.titulo)}</span>`:''}</span><span style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">${p?`<span class="tag ${p.status}">${stName(p.status)}</span>`:`<button class="btn alt sm" data-act="virar" data-id="${a.id}">Virar pedido</button>`}${edBtns('f',a.id)}</span></div>`}).join('')||'<p class="empty">Nenhum arquivo ainda.</p>'}</div></section>
  <section class="card"><h2>Entregas</h2><p class="sub">Assista, aprove ou sugira melhorias sem sair daqui.</p><div class="list" style="margin-top:12px">${ent.map(v=>{const ult=v.coments[v.coments.length-1];
  return `<div class="card" style="padding:14px"><div class="row" style="justify-content:space-between"><span class="t" style="font-weight:600">${esc(v.titulo)} — v${v.versao}.mp4</span><span class="tag ${v.status}">${stName(v.status)}</span></div>
- <div class="player" style="aspect-ratio:16/9;max-height:none;margin:10px 0;background:linear-gradient(160deg,${cores[v.cor%6]},#2b1a1e)" ><div>${svg('videos').replace('<svg','<svg width="36" height="36"')}<br>Prévia do vídeo do Drive</div></div>
+ ${player(v,'Prévia do vídeo do Drive','aspect-ratio:16/9;max-height:none;margin:10px 0')}
  ${ult?`<div class="com"><small>Último comentário · ${esc(ult.a)} · ${esc(ult.q)}</small>${esc(ult.t)}</div>`:''}
  ${papel=='inst'&&v.status=='aprovacao'?`<label for="sg${v.id}">Sugestões de melhoria (opcional para aprovar)</label><textarea id="sg${v.id}" style="min-height:80px" placeholder="Ex.: aos 0:15, cortar a pausa; letra da legenda maior"></textarea>
  <div class="row" style="margin-top:10px"><button class="btn" data-act="dAprovar" data-id="${v.id}">Aprovar</button>${waBtn('drive',v.id,'sg'+v.id)}</div>${waHint()}`:
  `<button class="btn alt" style="margin-top:8px" data-video="${v.id}">Ver detalhes</button>`}</div>`}).join('')||'<p class="empty">Nenhuma entrega ainda.</p>'}</div></section></div>`},
 marca(){
  const c=CANVA;db.artes=db.artes||{};
- return head('Artes','Peças criadas no Canva para o Instagram. Veja, aprove ou sugira melhorias.',`<a class="btn alt" style="text-decoration:none;display:inline-flex;align-items:center" href="${c.pasta}" target="_blank" rel="noopener">Abrir pasta no Canva</a>`)+
+ const ped=db.pedArtes.map(p=>{const ult=(p.coments||[])[p.coments.length-1];let acoes='';
+  if(papel=='ed'&&p.status=='pedido')acoes=`<button class="btn sm" data-act="paSt" data-id="${p.id}" data-st="criacao">Começar criação</button>`;
+  if(papel=='ed'&&(p.status=='criacao'||p.status=='ajuste'))acoes=`<button class="btn sm" data-act="paEntregar" data-id="${p.id}">Entregar arte</button>`;
+  if(papel=='inst'&&p.status=='aprovacao')acoes=`<label for="pa${p.id}" style="margin:0;width:100%">Quer mudar alguma coisa?</label><textarea id="pa${p.id}" style="min-height:70px" placeholder="Ex.: aumentar o texto do título"></textarea><div class="row"><button class="btn sm" data-act="paSt" data-id="${p.id}" data-st="aprovado">Aprovar</button>${waBtn('parte',p.id,'pa'+p.id)}</div>`;
+  return `<article class="card" style="padding:14px;display:flex;flex-direction:column;gap:8px">
+  ${p.img?`<img class="refimg" style="aspect-ratio:4/5" src="${p.img}" alt="Prévia: ${esc(p.titulo)}">`:''}
+  <div class="row" style="justify-content:space-between"><span class="tag ${p.status=='aprovacao'?'escrito':p.status}">${PA[p.status]}</span><span class="m" style="color:var(--mute);font-size:13px">${esc(p.tipo)} · para ${fmt(p.data)}</span></div>
+  <div class="t" style="font-weight:600">${esc(p.titulo)}</div>${msteps(PSTEP,p.status=='ajuste'?'criacao':p.status)}
+  ${p.texto?`<div class="com"><small>Texto da arte</small>${esc(p.texto)}</div>`:''}${(p.fotos||[]).length?`<div><small style="color:var(--mute);font-size:13px">Imagens enviadas (${p.fotos.length})</small><div class="fotos" style="margin-top:4px">${p.fotos.map(f=>`<img src="${f.img}" alt="${esc(f.nome)}" title="${esc(f.nome)}">`).join('')}</div></div>`:''}${p.obs?`<div class="com"><small>Observações</small>${esc(p.obs)}</div>`:''}${ult?`<div class="com"><small>${esc(ult.a)} · ${esc(ult.q)}</small>${esc(ult.t)}</div>`:''}
+  <div class="row">${p.ref?`<a class="btn alt sm" style="text-decoration:none;display:inline-flex;align-items:center" href="${esc(p.ref)}" target="_blank" rel="noopener">Referência</a>`:''}${p.canva?`<a class="btn alt sm" style="text-decoration:none;display:inline-flex;align-items:center" href="${esc(p.canva)}" target="_blank" rel="noopener">Ver no Canva</a>`:''}</div>
+  ${acoes}<div style="margin-top:auto;padding-top:6px">${edBtns('pa',p.id)}</div></article>`}).join('');
+ return head('Artes','Peçam artes novas e aprovem as que ficaram prontas.',`<button class="btn hot" data-act="novaArte">+ Pedir arte</button><a class="btn alt" style="text-decoration:none;display:inline-flex;align-items:center" href="${c.pasta}" target="_blank" rel="noopener">Abrir pasta no Canva</a>`)+
+ `<h2 style="margin:4px 0 12px">Pedidos de arte</h2><div class="refs" style="margin-bottom:28px">${ped||'<p class="empty">Nenhum pedido ainda. Toque em "+ Pedir arte".</p>'}</div><h2 style="margin:0 0 12px">Artes prontas</h2>`+
  `<p class="sub" style="margin:-10px 0 18px;font-size:14px">Cada arte abre direto no Canva, sem login. A pasta completa abre para quem foi convidada no Canva.</p>`+
  `<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))">${c.itens.map(it=>{const a=db.artes[it.id]||{s:'aprovacao',c:[]};const ult=a.c[a.c.length-1];
  return `<article class="card" style="padding:14px;display:flex;flex-direction:column;gap:10px">
@@ -321,30 +374,38 @@ roteiros(){
  return head('Roteiros','Mandem o roteiro que vocês escreveram. Ele volta melhorado: gancho mais forte, texto mais enxuto e chamada no final.',`<button class="btn hot" data-act="novoRot">+ Enviar roteiro para melhorar</button>`)+
  `<div class="list">${db.roteiros.map(r=>`<button class="item" data-rot="${r.id}"><span class="thumb" style="background:var(--brand2);color:var(--brand)">${svg('roteiros')}</span><span style="flex:1"><span class="t">${esc(r.titulo)}</span><br><span class="m">${esc(r.formato)} · para ${fmt(r.data)}</span>${msteps(RSTEP,r.status=='ajuste'?'enviado':r.status)}</span><span class="tag ${r.status=='melhorado'?'escrito':r.status}">${RS[r.status]}</span></button>`).join('')||'<p class="empty">Nenhum roteiro enviado ainda.</p>'}</div>`},
 calendario(){
- const m=agMes,dias=['dom','seg','ter','qua','qui','sex','sáb'];
- const reels=db.videos.filter(v=>v.tipo=='Reels'&&(v.post||'').slice(5,7)==m).sort((a,b)=>a.post.localeCompare(b.post));
- const ex=db.extras[m]||0,inc=PLANO+ex,usados=reels.length,livres=Math.max(0,inc-usados),fora=Math.max(0,usados-inc);
+ const dias=['dom','seg','ter','qua','qui','sex','sáb'],cur=MES_ATUAL,prox=addMes(cur,1);
+ const datas=[...db.videos.map(v=>v.post),...db.roteiros.map(r=>r.data),...db.pedArtes.map(p=>p.data)].filter(Boolean).map(d=>d.slice(0,7));
+ const todos=[...new Set([...datas,cur,prox])];
+ const futuros=todos.filter(k=>k>cur).sort(),passados=todos.filter(k=>k<cur).sort().reverse();
  const dia=d=>`<b class="d">${d.slice(8)}<small>${dias[new Date(d+'T12:00').getDay()]}</small></b>`;
- const slot=(v,k)=>{const extra=k>=PLANO,over=k>=inc;return `<button class="slot ${over?'over':extra?'extra':''}" data-video="${v.id}">${dia(v.post)}<span><span class="t" style="font-weight:600">${esc(v.titulo)}</span><br><span class="m" style="color:var(--mute);font-size:13px">Reels ${k+1}${over?' · fora do plano':extra?' · extra '+brl(EXTRA):''} · ${stName(v.status)}</span>${msteps(STK,v.status)}</span></button>`};
- const vazio=k=>`<button class="slot free ${k>=PLANO?'extra':''}" data-act="agendar" data-mes="${m}"><b class="d">+</b><span><span class="t" style="font-weight:600">Reels ${k+1} livre</span><br><span class="m" style="color:var(--mute);font-size:13px">${k>=PLANO?'Extra '+brl(EXTRA)+' · ':''}Toque para agendar</span></span></button>`;
- const outros=[...db.videos.filter(v=>v.tipo!='Reels'&&(v.post||'').slice(5,7)==m).map(v=>({d:v.post,t:v.titulo,k:v.tipo,s:stName(v.status),st:msteps(STK,v.status),a:`data-video="${v.id}"`})),
-  ...db.roteiros.filter(r=>(r.data||'').slice(5,7)==m).map(r=>({d:r.data,t:r.titulo,k:'Roteiro',s:RS[r.status],st:msteps(RSTEP,r.status=='ajuste'?'enviado':r.status),a:`data-rot="${r.id}"`}))].sort((a,b)=>a.d.localeCompare(b.d));
- return head('Agenda','O plano de cada mês, com a etapa de cada conteúdo.')+
- `<div class="filters">${['11','12','01'].map(k=>`<button data-mes="${k}" aria-pressed="${m==k}">${MESES[k]}</button>`).join('')}</div>
- <div class="plan"><span class="pill">Plano: ${PLANO} Reels por mês</span><span class="pill">Agendados: ${usados} de ${inc}</span>${ex?`<span class="pill" style="border-color:var(--acc)">Extras: ${ex} · ${brl(ex*EXTRA)}</span>`:''}
- <button class="btn hot" data-act="extra" data-mes="${m}">+ Reels extra</button>${ex&&livres?`<button class="btn alt" data-act="extraMenos" data-mes="${m}">− Tirar extra</button>`:''}</div>
- ${fora?`<p class="err" style="margin:-6px 0 14px">${fora} Reels passaram do plano deste mês. Adicione ${fora>1?'extras':'um extra'} (${brl(EXTRA)} cada) ou mude a data.</p>`:''}
- <div class="slots">${reels.map(slot).join('')}${Array.from({length:livres},(_,i)=>vazio(usados+i)).join('')}</div>
- <p class="hint" style="margin-top:12px">Cada Reels extra custa ${brl(EXTRA)} e entra na conta do mês. Vídeos de até 1min30.</p>
- ${outros.length?`<h2 style="margin:26px 0 10px">Outros conteúdos de ${MESES[m]}</h2><div class="list">${outros.map(o=>`<button class="day item" ${o.a}><b>${o.d.slice(8)}<small>${dias[new Date(o.d+'T12:00').getDay()]}</small></b><span><span class="t">${esc(o.t)}</span><br><span class="m">${esc(o.k)} · ${esc(o.s)}</span>${o.st}</span></button>`).join('')}</div>`:''}`},
+ const secao=(m,tipo)=>{const pass=tipo=='hist';
+  const reels=db.videos.filter(v=>v.tipo=='Reels'&&(v.post||'').slice(0,7)==m).sort((a,b)=>a.post.localeCompare(b.post));
+  const ex=db.extras[m]||0,inc=PLANO+ex,usados=reels.length,livres=Math.max(0,inc-usados),fora=Math.max(0,usados-inc);
+  const slot=(v,k)=>{const extra=k>=PLANO,over=k>=inc;return `<button class="slot ${over?'over':extra?'extra':''}" data-video="${v.id}">${dia(v.post)}<span><span class="t" style="font-weight:600">${esc(v.titulo)}</span><br><span class="m" style="color:var(--mute);font-size:13px">Reels ${k+1}${over?' · fora do plano':extra?' · extra '+brl(EXTRA):''} · ${stName(v.status)}</span>${msteps(STK,v.status)}</span></button>`};
+  const vazio=k=>pass?`<div class="slot free"><b class="d">–</b><span><span class="t" style="font-weight:600">Reels ${k+1}</span><br><span class="m" style="color:var(--mute);font-size:13px">Não usado</span></span></div>`:`<button class="slot free ${k>=PLANO?'extra':''}" data-act="agendar" data-mes="${m}"><b class="d">+</b><span><span class="t" style="font-weight:600">Reels ${k+1} livre</span><br><span class="m" style="color:var(--mute);font-size:13px">${k>=PLANO?'Extra '+brl(EXTRA)+' · ':''}Toque para agendar</span></span></button>`;
+  const outros=[...db.videos.filter(v=>v.tipo!='Reels'&&(v.post||'').slice(0,7)==m).map(v=>({d:v.post,t:v.titulo,k:v.tipo,s:stName(v.status),st:msteps(STK,v.status),a:`data-video="${v.id}"`})),
+   ...db.roteiros.filter(r=>(r.data||'').slice(0,7)==m).map(r=>({d:r.data,t:r.titulo,k:'Roteiro',s:RS[r.status],st:msteps(RSTEP,r.status=='ajuste'?'enviado':r.status),a:`data-rot="${r.id}"`})),
+   ...db.pedArtes.filter(p=>(p.data||'').slice(0,7)==m).map(p=>({d:p.data,t:p.titulo,k:'Arte · '+p.tipo,s:PA[p.status],st:msteps(PSTEP,p.status=='ajuste'?'criacao':p.status),a:`data-goto="marca"`}))].sort((a,b)=>a.d.localeCompare(b.d));
+  const rot={prox:'Planejamento',atual:'Mês atual',hist:'Histórico'}[tipo];
+  return `<section class="card" id="mes-${m}" style="margin-bottom:18px${tipo=='atual'?';border:2px solid var(--brand)':''}">
+  <div class="top" style="margin-bottom:6px"><h2>${mesNome(m)}</h2><span class="tag ${tipo=='atual'?'aprovado':''}">${rot}</span></div>
+  <div class="plan"><span class="pill">Plano: ${PLANO} Reels</span><span class="pill">${pass?'Usados':'Agendados'}: ${usados} de ${inc}</span>${ex?`<span class="pill" style="border-color:var(--acc)">Extras: ${ex} · ${brl(ex*EXTRA)}</span>`:''}
+  ${pass?'':`<button class="btn hot" data-act="extra" data-mes="${m}">+ Reels extra</button>${ex&&livres?`<button class="btn alt" data-act="extraMenos" data-mes="${m}">− Tirar extra</button>`:''}`}</div>
+  ${fora&&!pass?`<p class="err" style="margin:-6px 0 14px">${fora} Reels passaram do plano deste mês. Adicione ${fora>1?'extras':'um extra'} (${brl(EXTRA)} cada) ou mude a data.</p>`:''}
+  <div class="slots">${reels.map(slot).join('')}${Array.from({length:livres},(_,i)=>vazio(usados+i)).join('')}</div>
+  ${outros.length?`<h3 style="margin:20px 0 10px">Outros conteúdos</h3><div class="list">${outros.map(o=>`<button class="day item" ${o.a}><b>${o.d.slice(8)}<small>${dias[new Date(o.d+'T12:00').getDay()]}</small></b><span><span class="t">${esc(o.t)}</span><br><span class="m">${esc(o.k)} · ${esc(o.s)}</span>${o.st}</span></button>`).join('')}</div>`:''}</section>`};
+ return head('Agenda','Próximo mês, mês atual e, rolando para baixo, o histórico dos meses anteriores.')+
+ `<p class="hint" style="margin:-10px 0 16px">Cada Reels extra custa ${brl(EXTRA)} e entra na conta do mês. Vídeos de até 1min30.</p>`+
+ futuros.map(m=>secao(m,'prox')).join('')+secao(cur,'atual')+(passados.length?`<h2 style="margin:26px 0 12px;color:var(--mute)">Histórico</h2>`+passados.map(m=>secao(m,'hist')).join(''):'')},
 refs(){
  return head('Referências','Conteúdos que vocês gostaram e querem algo nesse estilo. Mandem o link ou subam o arquivo.',`<button class="btn hot" data-act="novaRef">+ Adicionar referência</button>`)+
  `<div class="refs">${db.refs.map(r=>{let dom='';try{dom=r.link?new URL(r.link).hostname.replace('www.',''):''}catch(e){}
  return `<article class="card" style="padding:14px;display:flex;flex-direction:column;gap:10px">
- ${r.img?`<img class="refimg" src="${r.img}" alt="Referência: ${esc(r.titulo)}">`:`<div class="refph" style="background:linear-gradient(160deg,${cores[r.cor%6]},#2b1a1e)"><div>${svg(r.arq?'videos':'refs').replace('<svg','<svg width="34" height="34"')}<br>${esc(r.arq||dom||'Referência')}</div></div>`}
+ ${r.img?`${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">`:''}<img class="refimg" src="${r.img}" alt="Referência: ${esc(r.titulo)}">${r.link?'</a>':''}`:`<div class="refph" style="background:linear-gradient(160deg,${cores[r.cor%6]},#2b1a1e)"><div>${svg(r.arq?'videos':'refs').replace('<svg','<svg width="34" height="34"')}<br>${esc(r.arq||dom||'Referência')}</div></div>`}
  <div><span class="tag ${r.status=='usando'?'aprovado':''}">${r.status=='usando'?'Editor vai usar':'Nova'}</span><div class="t" style="font-weight:600;margin-top:8px">${esc(r.titulo)}</div><span style="color:var(--mute);font-size:14px">Enviada em ${esc(r.q)}</span></div>
  ${r.gostou?`<div class="com"><small>O que gostaram</small>${esc(r.gostou)}</div>`:''}
- <div class="row" style="margin-top:auto">${r.link?`<a class="btn alt" style="text-decoration:none;display:inline-flex;align-items:center" href="${esc(r.link)}" target="_blank" rel="noopener">Abrir referência</a>`:''}${papel=='ed'&&r.status!='usando'?`<button class="btn" data-act="refUsar" data-id="${r.id}">Vou usar</button>`:''}</div></article>`}).join('')||'<p class="empty">Nenhuma referência ainda.</p>'}</div>
+ <div class="row" style="margin-top:auto">${r.link?`<a class="btn alt" style="text-decoration:none;display:inline-flex;align-items:center" href="${esc(r.link)}" target="_blank" rel="noopener">Abrir referência</a>`:''}${papel=='ed'&&r.status!='usando'?`<button class="btn" data-act="refUsar" data-id="${r.id}">Vou usar</button>`:''}</div>${edBtns('ref',r.id)}</article>`}).join('')||'<p class="empty">Nenhuma referência ainda.</p>'}</div>
  <p class="hint" style="margin-top:12px">Exemplos de referência. Na versão final, o arquivo enviado vai para a pasta do Drive de vocês.</p>`},
 ajustes(){
  return head('Ajustes','Personalize a prévia.')+`<form class="card" id="cfg" style="max-width:560px"><label for="cNome">Nome do instituto</label><input id="cNome" value="${esc(db.cfg.nome)}">
@@ -373,8 +434,8 @@ function abrirVideo(id){
   acoes+=`<a class="btn wa" style="text-decoration:none;display:inline-flex;align-items:center" href="${waLink(msg)}" target="_blank" rel="noopener">Avisar no WhatsApp</a>`}
  DB.innerHTML=`<header><div><span class="tag ${v.status}">${stName(v.status)}</span><h2 style="margin-top:8px">${esc(v.titulo)}</h2><p class="sub">${esc(v.tipo)} · versão ${v.versao||'—'} · entrega ${fmt(v.prazo)} · post ${fmt(v.post)}</p></div><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>
  <div class="steps" aria-label="Etapa ${idx+1} de 6">${ST.map((s,i)=>`<i class="${i<=idx?'on':''}"></i>`).join('')}</div>
- <div class="player" style="background:linear-gradient(160deg,${cores[v.cor%6]},#2b1a1e)"><div>${svg('videos').replace('<svg','<svg width="44" height="44"')}<br>${v.versao?'Aqui toca a versão '+v.versao+' direto do Google Drive':'Material bruto recebido. A edição ainda não começou.'}</div></div>
- <p><a href="${esc(v.drive)}" target="_blank" rel="noopener">Abrir pasta no Drive</a></p>
+ ${player(v,v.versao?'Aqui toca a versão '+v.versao+' direto do Google Drive':'Material bruto recebido. A edição ainda não começou.')}
+ <div class="row" style="justify-content:space-between">${/^https:\/\/drive\.google\.com\/?$/.test(v.drive||'')?'<span class="hint" style="margin:0">Sem link de pasta do Drive</span>':`<a href="${esc(v.drive)}" target="_blank" rel="noopener">Abrir a pasta deste vídeo no Drive</a>`}${edBtns('v',v.id)}</div>${v.obs?`<div class="com"><small>Observações do envio</small>${esc(v.obs)}</div>`:''}
  <div class="row" style="margin:12px 0">${acoes}</div>
  ${papel=='inst'&&v.status=='aprovacao'?`<p class="hint">Para pedir ajuste, escreva no campo de comentário abaixo e toque em "Pedir ajuste no WhatsApp". Abre a conversa com ${waFmt()}.</p>`:''}${papel=='ed'?`<p class="hint">O botão abre o WhatsApp com a mensagem pronta.</p>`:''}
  <h3 style="margin-top:16px">Comentários</h3>${v.coments.map(c=>`<div class="com"><small>${esc(c.a)} · ${esc(c.q)}</small>${esc(c.t)}</div>`).join('')||'<p class="sub">Nenhum comentário ainda.</p>'}
@@ -388,7 +449,7 @@ function abrirRot(id){
  if(papel=='ed'&&(r.status=='enviado'||r.status=='ajuste'))corpo+=`<div><h3>Versão melhorada</h3><textarea id="tRot" style="min-height:240px">${esc(r.melhorado||r.original)}</textarea><label for="tNotas">O que mudou</label><textarea id="tNotas" style="min-height:80px" placeholder="Ex.: gancho mais forte, cortei repetições">${esc(r.notas)}</textarea></div></div><div class="row" style="margin-top:14px"><button class="btn" data-do="rEnviar">Enviar versão melhorada</button></div>`;
  else{corpo+=r.melhorado?`<div class="new"><h3>Versão melhorada</h3><pre class="rot">${esc(r.melhorado)}</pre></div></div>${r.notas?`<div class="com" style="margin-top:12px"><small>O que mudou</small>${esc(r.notas)}</div>`:''}`:`<div><h3>Versão melhorada</h3><p class="sub">O editor está melhorando este roteiro.</p></div></div>`;
   if(papel=='inst'&&r.status=='melhorado')corpo+=`<label for="rAj">Quer mudar alguma coisa?</label><textarea id="rAj" style="min-height:80px" placeholder="Ex.: trocar a palavra do gancho"></textarea><div class="row" style="margin-top:10px"><button class="btn" data-do="rAprovar">Aprovar roteiro</button>${waBtn('rot',r.id,'rAj')}</div>${waHint()}`}
- DB.innerHTML=`<header><div><span class="tag ${r.status=='melhorado'?'escrito':r.status}">${RS[r.status]}</span><h2 style="margin-top:8px">${esc(r.titulo)}</h2><p class="sub">${esc(r.formato)} · para ${fmt(r.data)}${r.objetivo?'<br>Objetivo: '+esc(r.objetivo):''}</p>${msteps(RSTEP,r.status=='ajuste'?'enviado':r.status)}</div><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>${corpo}`;
+ DB.innerHTML=`<header><div><span class="tag ${r.status=='melhorado'?'escrito':r.status}">${RS[r.status]}</span><h2 style="margin-top:8px">${esc(r.titulo)}</h2><p class="sub">${esc(r.formato)} · para ${fmt(r.data)}${r.objetivo?'<br>Objetivo: '+esc(r.objetivo):''}</p>${msteps(RSTEP,r.status=='ajuste'?'enviado':r.status)}<div style="margin-top:10px">${edBtns('r',r.id)}</div></div><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>${corpo}`;
  DB.dataset.rot=id;delete DB.dataset.video;if(!D.open)D.showModal();
 }
 
@@ -410,7 +471,7 @@ function form(tipo,data){
  <button class="btn hot" style="margin-top:14px">Enviar para melhorar</button></form>`;
  if(tipo=='ref')DB.innerHTML=`<header><div><h2>Adicionar referência</h2><p class="sub">Um conteúdo que vocês gostaram e querem algo parecido.</p></div><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>
  <form id="fRef"><label for="fT">O que é?</label><input id="fT" required placeholder="Ex.: Reels de outra mentora com cortes rápidos">
- <label for="fL">Link da referência</label><input id="fL" type="url" placeholder="https://www.instagram.com/reel/...">
+ <label for="fL">Link da referência (a capa aparece sozinha)</label><input id="fL" type="url" placeholder="https://www.instagram.com/reel/...">
  <label for="fA">Ou suba um arquivo (print, foto ou vídeo)</label><input id="fA" type="file" accept="image/*,video/*">
  <label for="fG">O que vocês gostaram?</label><textarea id="fG" style="min-height:90px" placeholder="O estilo, a música, os cortes, a legenda, a luz..."></textarea>
  <p class="err" id="fErr" hidden></p><button class="btn hot" style="margin-top:14px">Salvar referência</button></form>`;
@@ -418,20 +479,90 @@ function form(tipo,data){
  <div class="kpi" style="margin:4px 0 14px"><b>+ ${brl(EXTRA)}</b><span>por Reels extra, somado à conta de ${MESES[data]}</span></div>
  <p class="sub">Você já tem ${db.extras[data]||0} extra(s) neste mês. Com este, o valor extra do mês fica em ${brl(((db.extras[data]||0)+1)*EXTRA)}.</p>
  <div class="row" style="margin-top:14px"><button class="btn hot" data-act="extraOk" data-mes="${data}">Confirmar extra</button><button class="btn alt" data-act="fechar">Cancelar</button></div>`;
+ if(tipo=='arte')DB.innerHTML=`<header><div><h2>Pedir arte</h2><p class="sub">Contem o que precisam. A arte volta aqui para aprovar.</p></div><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>
+ <form id="fArte"><label for="aTp">Tipo de arte</label><select id="aTp">${TIPOS_ARTE.map(t=>`<option>${t}</option>`).join('')}</select>
+ <label for="aT">Tema</label><input id="aT" required placeholder="Ex.: Inscrições abertas para a mentoria de janeiro">
+ <label for="aX">Texto que deve aparecer na arte</label><textarea id="aX" style="min-height:100px" placeholder="Título, data, local, chamada..."></textarea>
+ <label for="aD">Para quando?</label><input id="aD" type="date" value="2026-12-05">
+ <label for="aI">Imagens para usar na arte (fotos, logo, prints)</label><input id="aI" type="file" accept="image/*" multiple><p class="hint">Até 6 imagens.</p><div class="fotos" id="aPrev"></div>
+ <label for="aR">Referência (opcional)</label><input id="aR" type="url" placeholder="Link de uma arte que gostaram">
+ <label for="aO">Observações</label><textarea id="aO" style="min-height:70px" placeholder="Foto que querem usar, cores, o que não pode faltar"></textarea>
+ <button class="btn hot" style="margin-top:14px">Enviar pedido</button></form>`;
+ if(tipo=='entregar'){const p=find('pa',data);DB.innerHTML=`<header><div><h2>Entregar arte</h2><p class="sub">${esc(p.titulo)}</p></div><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>
+ <form id="fEntregar" data-id="${p.id}"><label for="gC">Link do Canva (compartilhado com "qualquer pessoa com o link")</label><input id="gC" type="url" value="${esc(p.canva)}" placeholder="https://www.canva.com/design/.../view">
+ <label for="gI">Imagem da arte (opcional, para a prévia)</label><input id="gI" type="file" accept="image/*">
+ <p class="err" id="gErr" hidden></p><button class="btn hot" style="margin-top:14px">Enviar para aprovação</button></form>`}
+ if(tipo=='edit'){const {k,id}=data,o=find(k,id);const x=`<button class="x" data-act="fechar" aria-label="Fechar">×</button>`;
+  const opt=(arr,val)=>arr.map(a=>`<option ${a==val?'selected':''}>${a}</option>`).join('');
+  if(k=='v')DB.innerHTML=`<header><h2>Editar material</h2>${x}</header><form id="fEdit" data-k="v" data-id="${id}">
+   <label for="eT">O que é o vídeo?</label><input id="eT" required value="${esc(o.titulo)}">
+   <label for="eF">Formato</label><select id="eF">${opt(['Reels','Stories','YouTube','Feed'],o.tipo)}</select>
+   <label for="eVid">Trocar o vídeo (até 1min30)</label><input id="eVid" type="file" accept="video/*"><p class="err" id="eErr" hidden></p>
+   <label for="eD">Link da pasta no Drive</label><input id="eD" type="url" value="${esc(o.drive)}">
+   <label for="eP">Quando quer postar?</label><input id="eP" type="date" value="${esc(o.post)}">
+   <label for="eO">Observações</label><textarea id="eO">${esc(o.obs||'')}</textarea>
+   <button class="btn hot" style="margin-top:14px">Salvar alterações</button></form>`;
+  if(k=='f')DB.innerHTML=`<header><h2>Editar arquivo</h2>${x}</header><form id="fEdit" data-k="f" data-id="${id}">
+   <label for="eT">Nome do arquivo</label><input id="eT" required value="${esc(o.nome)}">
+   <label for="eV">Vincular a um vídeo</label><select id="eV"><option value="0">Nenhum</option>${db.videos.map(v=>`<option value="${v.id}" ${v.id==o.pedido?'selected':''}>${esc(v.titulo)}</option>`).join('')}</select>
+   <button class="btn hot" style="margin-top:14px">Salvar alterações</button></form>`;
+  if(k=='r')DB.innerHTML=`<header><h2>Editar roteiro</h2>${x}</header><form id="fEdit" data-k="r" data-id="${id}">
+   <label for="eT">Tema</label><input id="eT" required value="${esc(o.titulo)}">
+   <label for="eX">Roteiro de vocês</label><textarea id="eX" required style="min-height:180px">${esc(o.original)}</textarea>
+   ${o.melhorado?'<p class="hint">Se mudar o texto, o roteiro volta para o editor melhorar de novo.</p>':''}
+   <label for="eF">Formato</label><select id="eF">${opt(['Reels até 1min30','Reels 45s','Reels 60s','Reels 40s','Stories'],o.formato)}</select>
+   <label for="eO">Objetivo (opcional)</label><input id="eO" value="${esc(o.objetivo)}">
+   <label for="eP">Data desejada</label><input id="eP" type="date" value="${esc(o.data)}">
+   <button class="btn hot" style="margin-top:14px">Salvar alterações</button></form>`;
+  if(k=='pa')DB.innerHTML=`<header><h2>Editar pedido de arte</h2>${x}</header><form id="fEdit" data-k="pa" data-id="${id}">
+   <label for="eF">Tipo de arte</label><select id="eF">${opt(TIPOS_ARTE,o.tipo)}</select>
+   <label for="eT">Tema</label><input id="eT" required value="${esc(o.titulo)}">
+   <label for="eX">Texto que deve aparecer na arte</label><textarea id="eX" style="min-height:100px">${esc(o.texto)}</textarea>
+   <label for="eP">Para quando?</label><input id="eP" type="date" value="${esc(o.data)}">
+   ${(o.fotos||[]).length?`<label>Imagens enviadas (marque para remover)</label><div class="fotos">${o.fotos.map((f,i)=>`<label><input type="checkbox" class="rmFoto" value="${i}" aria-label="Remover ${esc(f.nome)}"><img src="${f.img}" alt="${esc(f.nome)}"></label>`).join('')}</div>`:''}
+   <label for="eI">Adicionar imagens</label><input id="eI" type="file" accept="image/*" multiple><div class="fotos" id="ePrev"></div>
+   <label for="eL">Referência</label><input id="eL" type="url" value="${esc(o.ref)}">
+   <label for="eO">Observações</label><textarea id="eO" style="min-height:70px">${esc(o.obs)}</textarea>
+   <button class="btn hot" style="margin-top:14px">Salvar alterações</button></form>`;
+  if(k=='ref')DB.innerHTML=`<header><h2>Editar referência</h2>${x}</header><form id="fEdit" data-k="ref" data-id="${id}">
+   <label for="eT">O que é?</label><input id="eT" required value="${esc(o.titulo)}">
+   <label for="eL">Link da referência</label><input id="eL" type="url" value="${esc(o.link)}">
+   <label for="eA">Trocar o arquivo (opcional)</label><input id="eA" type="file" accept="image/*,video/*">${o.arq?`<p class="hint">Arquivo atual: ${esc(o.arq)}</p>`:''}
+   <label for="eG">O que vocês gostaram?</label><textarea id="eG" style="min-height:90px">${esc(o.gostou)}</textarea>
+   <button class="btn hot" style="margin-top:14px">Salvar alterações</button></form>`}
+ if(tipo=='del'){const {k,id}=data,o=find(k,id),nome=o.titulo||o.nome;
+  DB.innerHTML=`<header><h2>Excluir ${KN[k]}?</h2><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>
+  <p><b>${esc(nome)}</b></p><p class="sub">${k=='v'?'O vídeo sai da lista, da agenda e do plano do mês. ':''}${k=='f'?'O arquivo sai da pasta Entrada. ':''}Isso não pode ser desfeito.</p>
+  <div class="row" style="margin-top:16px"><button class="btn del" data-act="delOk" data-k="${k}" data-id="${id}">Sim, excluir</button><button class="btn alt" data-act="fechar">Cancelar</button></div>`}
  delete DB.dataset.video;delete DB.dataset.rot;if(!D.open)D.showModal();
 }
 
+let drag=null,justDragged=0;
+document.addEventListener('pointerdown',e=>{const card=e.target.closest('.kcard');if(!card||e.button>0)return;
+ const onHandle=!!e.target.closest('[data-drag]');if(e.pointerType!=='mouse'&&!onHandle)return;if(e.target.closest('.btn')&&!onHandle)return;
+ if(onHandle)e.preventDefault();drag={id:card.dataset.id,card,x:e.clientX,y:e.clientY,ghost:null,over:null}});
+document.addEventListener('pointermove',e=>{if(!drag)return;
+ if(!drag.ghost){if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<6)return;const r=drag.card.getBoundingClientRect();const g=drag.card.cloneNode(true);g.classList.add('kghost');g.style.width=r.width+'px';g.style.left=r.left+'px';g.style.top=r.top+'px';document.body.appendChild(g);drag.ghost=g;drag.dx=e.clientX-r.left;drag.dy=e.clientY-r.top;drag.card.style.opacity='.35'}
+ e.preventDefault();drag.ghost.style.left=(e.clientX-drag.dx)+'px';drag.ghost.style.top=(e.clientY-drag.dy)+'px';
+ const st=document.elementFromPoint(e.clientX,e.clientY)?.closest('.stage');if(drag.over&&drag.over!==st)drag.over.classList.remove('over');if(st){st.classList.add('over');drag.over=st}else drag.over=null},{passive:false});
+const endDrag=e=>{if(!drag)return;const d=drag;drag=null;if(!d.ghost)return;d.ghost.remove();d.card.style.opacity='';justDragged=Date.now();
+ const st=document.elementFromPoint(e.clientX,e.clientY)?.closest('.stage');document.querySelectorAll('.stage.over').forEach(x=>x.classList.remove('over'));
+ if(!st)return;const v=db.videos.find(x=>x.id==d.id),ns=st.dataset.st;if(!v||v.status==ns)return;
+ if(ns=='aprovacao'&&!v.versao)v.versao=1;v.status=ns;notify(`"${v.titulo}": ${stName(ns)}`);save();render();toast('Movido para '+stName(ns))};
+document.addEventListener('pointerup',endDrag);document.addEventListener('pointercancel',e=>{if(drag&&drag.ghost){drag.ghost.remove();drag.card.style.opacity=''}drag=null;document.querySelectorAll('.stage.over').forEach(x=>x.classList.remove('over'))});
 document.addEventListener('click',e=>{
+ if(Date.now()-justDragged<350){e.preventDefault();e.stopPropagation();return}
  const wa=e.target.closest('[data-wa]');if(wa){const ta=document.getElementById(wa.dataset.ta),t=(ta&&ta.value||'').trim(),k=wa.dataset.wa,id=wa.dataset.id;
   if(!t){e.preventDefault();if(ta)ta.focus();toast('Escreva o ajuste antes de enviar');return}
   let nome='';
   if(k=='video'||k=='drive'){const v=db.videos.find(x=>x.id==id);nome='no vídeo "'+v.titulo+'"';v.coments.push({a:'Instituto',t,q:fmt(hoje)});v.status='ajuste'}
   if(k=='arte'){const it=CANVA.itens.find(x=>x.id==id);db.artes=db.artes||{};const ar=db.artes[id]=db.artes[id]||{s:'aprovacao',c:[]};ar.c.push({a:'Instituto',t,q:fmt(hoje)});ar.s='ajuste';nome='na arte "'+it.t+'"'}
+  if(k=='parte'){const p=find('pa',id);p.coments.push({a:'Instituto',t,q:fmt(hoje)});p.status='ajuste';nome='na arte "'+p.titulo+'"'}
   if(k=='rot'){const r=db.roteiros.find(x=>x.id==id);r.status='ajuste';r.notas=(r.notas?r.notas+'\n':'')+'Ajuste pedido: '+t;nome='no roteiro "'+r.titulo+'"'}
   wa.href=waLink(`Olá! Ajuste ${nome} (${db.cfg.nome}):\n${t}`);
   notify('Ajuste pedido '+nome);save();toast('Abrindo o WhatsApp…');setTimeout(()=>{render();if(D.open)D.close()},400);return}
  const pb=e.target.closest('.pal');if(pb){setPal(pb.dataset.pal);document.querySelectorAll('.pal').forEach(x=>x.setAttribute('aria-pressed',x.dataset.pal==pal));toast('Paleta: '+(PALS.find(x=>x[0]==pal)||PALS[0])[1]);return}
- const b=e.target.closest('[data-video],[data-rot],[data-act],[data-papel],[data-filtro],[data-do],[data-mes]');if(!b)return;
+ const b=e.target.closest('[data-video],[data-rot],[data-act],[data-papel],[data-filtro],[data-do],[data-mes],[data-goto]');if(!b)return;
  if(b.dataset.do){const d=b.dataset.do;
   if(DB.dataset.video){const v=db.videos.find(x=>x.id==DB.dataset.video);
    if(d=='aprovar'){v.status='aprovado';notify(`${db.cfg.nome} aprovou "${v.titulo}"`);toast('Vídeo aprovado!')}
@@ -448,12 +579,25 @@ document.addEventListener('click',e=>{
  if(b.dataset.papel){papel=b.dataset.papel;try{localStorage.setItem('portal-papel',papel)}catch(x){}render();toast(papel=='inst'?'Vendo como o instituto':'Vendo como editor');return}
  if(b.dataset.filtro){filtro=b.dataset.filtro;render();return}
  const a=b.dataset.act;
- if(!a&&b.dataset.mes){agMes=b.dataset.mes;render();return}
+ if(b.dataset.goto){location.hash=b.dataset.goto;return}
  if(a=='extra'){form('extra',b.dataset.mes);return}
  if(a=='extraOk'){const m=b.dataset.mes;db.extras[m]=(db.extras[m]||0)+1;notify(`Reels extra adicionado em ${MESES[m]} (+${brl(EXTRA)})`);save();D.close();render();toast('Reels extra adicionado');return}
  if(a=='extraMenos'){const m=b.dataset.mes;db.extras[m]=Math.max(0,(db.extras[m]||0)-1);save();render();toast('Extra removido');return}
- if(a=='agendar'){const m=b.dataset.mes;form('v',(m=='01'?'2027':'2026')+'-'+m+'-'+(m=='11'?'29':'05'));return}
+ if(a=='agendar'){const m=b.dataset.mes;form('v',m==MES_ATUAL&&hoje.slice(8)<'28'?addDia(hoje,3):m+'-05');return}
  if(a=='novaRef'){form('ref');return}
+ if(a=='novaArte'){form('arte');return}
+ if(a=='paEntregar'){form('entregar',b.dataset.id);return}
+ if(a=='paSt'){const p=find('pa',b.dataset.id),st=b.dataset.st;const ta=document.getElementById('pa'+p.id);if(ta&&ta.value.trim())p.coments.push({a:'Instituto',t:ta.value.trim(),q:fmt(hoje)});
+  p.status=st;notify(`Arte "${p.titulo}": ${PA[st]}`);save();render();toast(st=='aprovado'?'Arte aprovada!':'Status atualizado');return}
+ if(a=='editar'){e.stopPropagation();form('edit',{k:b.dataset.k,id:b.dataset.id});return}
+ if(a=='excluir'){e.stopPropagation();form('del',{k:b.dataset.k,id:b.dataset.id});return}
+ if(a=='delOk'){const k=b.dataset.k,id=b.dataset.id,o=find(k,id),nome=o.titulo||o.nome;
+  if(k=='v'){db.videos=db.videos.filter(x=>x.id!=id);db.drive.entrada.forEach(f=>{if(f.pedido==id)f.pedido=0})}
+  if(k=='f')db.drive.entrada=db.drive.entrada.filter(x=>x.id!=id);
+  if(k=='r')db.roteiros=db.roteiros.filter(x=>x.id!=id);
+  if(k=='ref')db.refs=db.refs.filter(x=>x.id!=id);
+  if(k=='pa')db.pedArtes=db.pedArtes.filter(x=>x.id!=id);
+  notify('Excluído: '+nome);save();D.close();render();toast('Excluído');return}
  if(a=='refUsar'){const r=db.refs.find(x=>x.id==b.dataset.id);r.status='usando';notify(`Editor vai usar a referência "${r.titulo}"`);save();render();toast('Marcada para usar');return}
  if(a=='cores'){DB.innerHTML=`<header><div><h2>Escolha as cores</h2><p class="sub">Toque numa paleta para ver o portal inteiro com ela.</p></div><button class="x" data-act="fechar" aria-label="Fechar">×</button></header>${palHTML()}`;delete DB.dataset.video;delete DB.dataset.rot;if(!D.open)D.showModal();return}
  if(a=='aAprovar'||a=='aSugerir'){const id=b.dataset.id,it=CANVA.itens.find(x=>x.id==id);db.artes=db.artes||{};const ar=db.artes[id]=db.artes[id]||{s:'aprovacao',c:[]};const t=document.getElementById('ar'+id).value.trim();
@@ -481,10 +625,11 @@ document.addEventListener('submit',e=>{e.preventDefault();const f=e.target;
   const nf=document.getElementById('nFile').files[0];if(!nf&&!document.getElementById('nD').value){fe.hidden=false;fe.textContent='Escolha o vídeo ou cole o link do Drive.';return}
   const id=Math.max(0,...db.videos.map(v=>v.id))+1;const p=document.getElementById('nP').value;
   const d=new Date((p||'2026-12-01')+'T12:00');d.setDate(d.getDate()-2);
-  db.videos.unshift({id,titulo:document.getElementById('nT').value.trim(),tipo:document.getElementById('nF').value,status:'recebido',prazo:d.toISOString().slice(0,10),post:p,drive:document.getElementById('nD').value||'https://drive.google.com/',versao:0,coments:document.getElementById('nO').value.trim()?[{a:'Instituto',t:document.getElementById('nO').value.trim(),q:fmt(hoje)}]:[],cor:id});
+  db.videos.unshift({id,titulo:document.getElementById('nT').value.trim(),tipo:document.getElementById('nF').value,status:'recebido',prazo:d.toISOString().slice(0,10),post:p,drive:document.getElementById('nD').value||'https://drive.google.com/',versao:0,obs:document.getElementById('nO').value.trim(),coments:document.getElementById('nO').value.trim()?[{a:'Instituto',t:document.getElementById('nO').value.trim(),q:fmt(hoje)}]:[],cor:id});
   if(nf){db.drive.entrada.unshift({id:Math.max(0,...db.drive.entrada.map(a=>a.id))+1,nome:nf.name,tam:Math.max(1,Math.round(nf.size/1048576))+' MB'+(f.dataset.dur?' · '+f.dataset.dur:''),q:fmt(hoje),por:papel=='inst'?db.cfg.nome:'Editor',pedido:id})}
   if(DB.dataset.arq){const arq=db.drive.entrada.find(x=>x.id==DB.dataset.arq);if(arq)arq.pedido=id;delete DB.dataset.arq}
-  notify('Novo material recebido: '+db.videos[0].titulo);save();D.close();location.hash='videos';render();toast('Material enviado! O editor foi avisado.')}
+  notify('Novo material recebido: '+db.videos[0].titulo);save();D.close();location.hash='videos';render();toast('Material enviado! O editor foi avisado.');
+  if(nf)thumbOf(nf).then(t=>{if(!t)return;const v=db.videos.find(x=>x.id==id);if(v)v.thumb=t;const ef=db.drive.entrada.find(x=>x.pedido==id&&x.nome==nf.name);if(ef)ef.thumb=t;save();render()})}
  if(f.id=='fRot'){const id=Math.max(0,...db.roteiros.map(r=>r.id))+1;db.roteiros.unshift({id,titulo:document.getElementById('rT').value.trim(),formato:document.getElementById('rF').value,objetivo:document.getElementById('rO').value.trim(),status:'enviado',data:document.getElementById('rD').value,original:document.getElementById('rTx').value.trim(),melhorado:'',notas:''});
   notify('Roteiro para melhorar: '+db.roteiros[0].titulo);save();D.close();location.hash='roteiros';render();toast('Roteiro enviado para melhorar!')}
  if(f.id=='fRef'){const fe=document.getElementById('fErr'),L=document.getElementById('fL').value.trim(),fa=document.getElementById('fA').files[0];
@@ -492,18 +637,49 @@ document.addEventListener('submit',e=>{e.preventDefault();const f=e.target;
   const id=Math.max(0,...db.refs.map(r=>r.id))+1;
   const add=img=>{db.refs.unshift({id,titulo:document.getElementById('fT').value.trim(),link:L,gostou:document.getElementById('fG').value.trim(),status:'nova',img:img||'',arq:fa?fa.name:'',q:fmt(hoje),cor:id});
    notify('Nova referência: '+db.refs[0].titulo);save();D.close();location.hash='refs';render();toast('Referência salva!')};
-  thumbOf(fa).then(add)}
+  (fa?thumbOf(fa):linkThumb(L)).then(add)}
  if(f.id=='fDrive'){db.drive.conectado=true;db.drive.conta=document.getElementById('dEmail').value.trim();save();render();toast('Drive conectado!')}
+ if(f.id=='fArte'){const g=i=>document.getElementById(i);const id=Math.max(0,...db.pedArtes.map(p=>p.id))+1;
+  const fs=[...g('aI').files].slice(0,6);
+  Promise.all(fs.map(thumbOf)).then(ims=>{db.pedArtes.unshift({id,tipo:g('aTp').value,titulo:g('aT').value.trim(),texto:g('aX').value.trim(),data:g('aD').value,ref:g('aR').value.trim(),obs:g('aO').value.trim(),status:'pedido',canva:'',img:'',q:fmt(hoje),coments:[],fotos:fs.map((f,i)=>({nome:f.name,img:ims[i]})).filter(x=>x.img)});
+  notify('Novo pedido de arte: '+db.pedArtes[0].titulo);save();D.close();location.hash='marca';render();toast('Pedido de arte enviado!')})}
+ if(f.id=='fEntregar'){const p=find('pa',f.dataset.id),g=i=>document.getElementById(i),c=g('gC').value.trim(),fi=g('gI').files[0];
+  if(!c&&!fi){const er=g('gErr');er.hidden=false;er.textContent='Cole o link do Canva ou envie a imagem.';return}
+  thumbOf(fi).then(img=>{if(c)p.canva=c;if(img)p.img=img;p.status='aprovacao';notify(`Arte "${p.titulo}" pronta para aprovar`);save();D.close();render();toast('Arte enviada para aprovação')})}
+ if(f.id=='fEdit'){const k=f.dataset.k,o=find(k,f.dataset.id),g=i=>document.getElementById(i);
+  if(k=='v'){const nv=g('eVid').files[0];
+   const ap=()=>{o.titulo=g('eT').value.trim();o.tipo=g('eF').value;o.drive=g('eD').value||o.drive;o.post=g('eP').value;o.obs=g('eO').value.trim()};
+   if(nv){dur(nv).then(d=>{if(d>90){const er=g('eErr');er.hidden=false;er.textContent=`Este vídeo tem ${mmss(d)}. O limite é 1min30.`;return}
+    thumbOf(nv).then(t=>{ap();if(t)o.thumb=t;db.drive.entrada.unshift({id:Math.max(0,...db.drive.entrada.map(a=>a.id))+1,thumb:t||'',nome:nv.name,tam:Math.max(1,Math.round(nv.size/1048576))+' MB'+(d?' · '+mmss(d):''),q:fmt(hoje),por:papel=='inst'?db.cfg.nome:'Editor',pedido:o.id});
+     notify('Vídeo trocado: '+o.titulo);save();D.close();render();toast('Vídeo trocado')})});return}
+   ap()}
+  if(k=='f'){o.nome=g('eT').value.trim();o.pedido=+g('eV').value}
+  if(k=='pa'){o.tipo=g('eF').value;o.titulo=g('eT').value.trim();o.texto=g('eX').value.trim();o.data=g('eP').value;o.ref=g('eL').value.trim();o.obs=g('eO').value.trim();
+   const rm=[...document.querySelectorAll('.rmFoto:checked')].map(c=>+c.value);o.fotos=(o.fotos||[]).filter((x,i)=>!rm.includes(i));
+   const nf=[...g('eI').files].slice(0,Math.max(0,6-o.fotos.length));
+   if(nf.length){Promise.all(nf.map(thumbOf)).then(ims=>{nf.forEach((f,i)=>{if(ims[i])o.fotos.push({nome:f.name,img:ims[i]})});notify('Editado: '+o.titulo);save();D.close();render();toast('Alterações salvas')});return}}
+  if(k=='r'){const nt=g('eX').value.trim();if(nt!==o.original&&o.status!='enviado'){o.status='enviado';o.melhorado='';o.notas=''}
+   o.original=nt;o.titulo=g('eT').value.trim();o.formato=g('eF').value;o.objetivo=g('eO').value.trim();o.data=g('eP').value}
+  const fim=()=>{notify('Editado: '+(o.titulo||o.nome));save();D.close();render();toast('Alterações salvas')};
+  if(k=='ref'){o.titulo=g('eT').value.trim();o.link=g('eL').value.trim();o.gostou=g('eG').value.trim();const fa=g('eA').files[0];
+   if(fa){thumbOf(fa).then(img=>{o.img=img||'';o.arq=fa.name;fim()});return}
+   if(o.link&&!o.arq&&(!o.img||g('eL').defaultValue!==o.link)){linkThumb(o.link).then(img=>{if(img)o.img=img;fim()});return}}
+  fim()}
  if(f.id=='cfg'){db.cfg.nome=document.getElementById('cNome').value.trim()||'Instituto Perfil 40+';db.cfg.whats=document.getElementById('cWa').value.replace(/\D/g,'');save();render();toast('Ajustes salvos')}
 });
 D.addEventListener('click',e=>{if(e.target===D)D.close()});
 D.addEventListener('close',()=>{delete DB.dataset.arq});
+const linkThumb=async url=>{if(!url)return'';const y=url.match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/);if(y)return`https://img.youtube.com/vi/${y[1]}/hqdefault.jpg`;
+ try{const r=await fetch('https://api.microlink.io/?url='+encodeURIComponent(url)).then(x=>x.json());return(r&&r.data&&r.data.image&&r.data.image.url)||''}catch(e){return''}};
 const thumbOf=f=>new Promise(res=>{if(!f)return res('');try{const u=URL.createObjectURL(f);const cv=document.createElement('canvas');
- const draw=(el,w,h)=>{const s=Math.min(1,480/Math.max(w,h));cv.width=Math.round(w*s);cv.height=Math.round(h*s);cv.getContext('2d').drawImage(el,0,0,cv.width,cv.height);let d='';try{d=cv.toDataURL('image/jpeg',.7)}catch(x){}URL.revokeObjectURL(u);res(d)};
+ const draw=(el,w,h)=>{const s=Math.min(1,360/Math.max(w,h));cv.width=Math.round(w*s);cv.height=Math.round(h*s);cv.getContext('2d').drawImage(el,0,0,cv.width,cv.height);let d='';try{d=cv.toDataURL('image/jpeg',.7)}catch(x){}URL.revokeObjectURL(u);res(d)};
  if(/^image\//.test(f.type)){const im=new Image();im.onload=()=>draw(im,im.naturalWidth,im.naturalHeight);im.onerror=()=>res('');im.src=u}
  else if(/^video\//.test(f.type)){const v=document.createElement('video');v.muted=true;v.preload='auto';v.onloadeddata=()=>{v.currentTime=Math.min(1,(v.duration||2)/2)};v.onseeked=()=>draw(v,v.videoWidth,v.videoHeight);v.onerror=()=>res('');setTimeout(()=>res(''),8000);v.src=u}
  else res('')}catch(x){res('')}});
 document.addEventListener('change',async e=>{
+ if(e.target.id=='aI'||e.target.id=='eI'){const box=document.getElementById(e.target.id=='aI'?'aPrev':'ePrev'),fs=[...e.target.files].slice(0,6);
+  box.innerHTML='';for(const f of fs){const t=await thumbOf(f);if(t)box.insertAdjacentHTML('beforeend',`<img src="${t}" alt="${esc(f.name)}">`)}
+  if(e.target.files.length>6)toast('Só as 6 primeiras imagens serão enviadas');return}
  if(e.target.id=='nFile'){const f=e.target.files[0],fm=document.getElementById('fNovo'),info=document.getElementById('nFileInfo'),er=document.getElementById('nErr');delete fm.dataset.bad;delete fm.dataset.dur;er.hidden=true;if(!f)return;
   info.textContent='Conferindo a duração…';const d=await dur(f);
   if(d>90){fm.dataset.bad=1;e.target.value='';info.textContent='';er.hidden=false;er.textContent=`Este vídeo tem ${mmss(d)}. O limite é 1min30.`;return}
@@ -512,7 +688,8 @@ document.addEventListener('change',async e=>{
  const ok=[],longos=[];for(const f of fs){const d=await dur(f);if(d>90)longos.push(f.name+' ('+mmss(d)+')');else ok.push([f,d])}
  const er=document.getElementById('upErr');
  let id=Math.max(0,...db.drive.entrada.map(a=>a.id));
- ok.forEach(([f,d])=>db.drive.entrada.unshift({id:++id,nome:f.name,tam:(f.size>1048576?Math.round(f.size/1048576)+' MB':Math.max(1,Math.round(f.size/1024))+' KB')+(d?' · '+mmss(d):''),q:fmt(hoje),por:papel=='inst'?db.cfg.nome:'Editor',pedido:0}));
+ const thumbs=await Promise.all(ok.map(([f])=>thumbOf(f)));
+ ok.forEach(([f,d],i)=>db.drive.entrada.unshift({id:++id,thumb:thumbs[i]||'',nome:f.name,tam:(f.size>1048576?Math.round(f.size/1048576)+' MB':Math.max(1,Math.round(f.size/1024))+' KB')+(d?' · '+mmss(d):''),q:fmt(hoje),por:papel=='inst'?db.cfg.nome:'Editor',pedido:0}));
  if(ok.length){notify(ok.length+' arquivo(s) novo(s) na pasta Entrada');save();render()}
  if(longos.length){const er2=document.getElementById('upErr');if(er2){er2.hidden=false;er2.textContent='Não enviados (passam de 1min30): '+longos.join(', ')}toast('Vídeos acima de 1min30 não foram enviados')}
  else toast('Arquivos enviados para a pasta Entrada')});
